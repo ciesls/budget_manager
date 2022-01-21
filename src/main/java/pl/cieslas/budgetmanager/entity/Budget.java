@@ -13,18 +13,18 @@ public class Budget {
     private String name;
     @Column(name = "budget_amount")
     private BigDecimal amount;
-    @ManyToOne
-    private Category category;
+//    @ManyToOne
+//    private Category category;
 
     public Budget(Long id, String name, BigDecimal amount, Category category) {
         this.id = id;
         this.name = name;
         this.amount = amount;
-        this.category = category;
+//        this.category = category;
     }
 
-    public Budget(Long id) {
-        this.id = id;
+    public Budget() {
+
     }
 
     public Long getId() {
@@ -51,11 +51,4 @@ public class Budget {
         this.amount = amount;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }
