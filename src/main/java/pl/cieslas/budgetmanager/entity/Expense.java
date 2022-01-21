@@ -27,8 +27,7 @@ public class Expense {
         this.category = category;
     }
 
-    public Expense(Long id) {
-        this.id = id;
+    public Expense() {
     }
 
     public Long getId() {
