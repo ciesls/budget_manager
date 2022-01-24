@@ -2,6 +2,7 @@ package pl.cieslas.budgetmanager.security;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.cieslas.budgetmanager.entity.User;
 
 import java.util.Arrays;
 import java.util.HashSet;

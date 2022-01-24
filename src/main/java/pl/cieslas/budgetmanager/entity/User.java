@@ -1,9 +1,9 @@
-package pl.cieslas.budgetmanager.security;
+package pl.cieslas.budgetmanager.entity;
 
-import org.springframework.security.core.GrantedAuthority;
+import pl.cieslas.budgetmanager.security.Role;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,8 +25,13 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-
+    public User(Long id, String username, String password, String email, int enabled, Set<Role> roles, List<Budget> userBudgets, List<Expense> userExpenses, List<Category> userCategories) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.enabled = enabled;
+        this.roles = roles;
     }
 
     public String getEmail() {

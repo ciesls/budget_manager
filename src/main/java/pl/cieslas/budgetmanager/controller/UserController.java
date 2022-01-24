@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.cieslas.budgetmanager.security.CurrentUser;
-import pl.cieslas.budgetmanager.security.User;
+import pl.cieslas.budgetmanager.entity.User;
 import pl.cieslas.budgetmanager.security.UserService;
 
 @Controller
@@ -23,8 +23,9 @@ public class UserController {
     @ResponseBody
     public String createUser() {
         User user = new User();
-        user.setUsername("cieslas");
-        user.setPassword("cieslas");
+        user.setUsername("ciesls");
+        user.setPassword("ciesls");
+        user.setEmail("ss@ss.pl");
         userService.saveUser(user);
         return "admin";
     }

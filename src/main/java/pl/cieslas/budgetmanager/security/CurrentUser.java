@@ -7,16 +7,16 @@ import java.util.Collection;
 
 public class CurrentUser extends User {
 
-    private final pl.cieslas.budgetmanager.security.User user;
+    private final pl.cieslas.budgetmanager.entity.User user;
 
     public CurrentUser(String username, String password,
                        Collection<? extends GrantedAuthority> authorities,
-                       pl.cieslas.budgetmanager.security.User user) {
+                       pl.cieslas.budgetmanager.entity.User user) {
         super(username, password, authorities);
         this.user = user;
     }
 
-    public pl.cieslas.budgetmanager.security.User getUser() {
+    public pl.cieslas.budgetmanager.entity.User getUser() {
         return user;
     }
 }
