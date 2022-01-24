@@ -2,6 +2,7 @@ package pl.cieslas.budgetmanager.entity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Budget {
@@ -13,18 +14,28 @@ public class Budget {
     private String name;
     @Column(name = "budget_amount")
     private BigDecimal amount;
-//    @ManyToOne
-//    private Category category;
+    @OneToMany
+    private List<Category> categories;
 
-    public Budget(Long id, String name, BigDecimal amount, Category category) {
+    @ManyToOne
+    private User user;
+
+    public Budget(Long id, String name, BigDecimal amount, List<Category> categories) {
         this.id = id;
         this.name = name;
         this.amount = amount;
-//        this.category = category;
+        this.categories = categories;
     }
 
     public Budget() {
+    }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {
@@ -51,4 +62,12 @@ public class Budget {
         this.amount = amount;
     }
 
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
 }

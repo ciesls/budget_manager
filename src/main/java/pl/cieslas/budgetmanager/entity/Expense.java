@@ -15,8 +15,10 @@ public class Expense {
     private BigDecimal amount;
     @Column(name = "created_on")
     private LocalDateTime created_on;
-    @OneToOne
-    private Category category;
+
+    @ManyToOne
+    private User user;
+
 
     public Expense(Long id, String name, String description, BigDecimal amount, LocalDateTime created_on, Category category) {
         this.id = id;
@@ -24,10 +26,18 @@ public class Expense {
         this.description = description;
         this.amount = amount;
         this.created_on = created_on;
-        this.category = category;
     }
 
     public Expense() {
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {
@@ -70,11 +80,4 @@ public class Expense {
         this.created_on = created_on;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
 }
