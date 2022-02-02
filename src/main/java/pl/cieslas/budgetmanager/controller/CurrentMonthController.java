@@ -1,4 +1,4 @@
 package pl.cieslas.budgetmanager.controller;
 
-public class InvestmentController {
+public class CurrentMonthController {
 }

@@ -15,6 +15,16 @@
     <title>Title</title>
 </head>
 <body>
+<form:form method="post" modelAttribute="user" action="/user/register">
+    <form:input type="text" path="username" class="form-control" placeholder="Username"
+                autofocus="true"/><br>
 
+    <form:input type="password" path="password" class="form-control" placeholder="Password"/><br>
+
+    <form:input type="email" path="email" class="form-control" placeholder="Email"/><br>
+
+    <input type="submit" value="Create account">
+
+</form:form>
 </body>
 </html>

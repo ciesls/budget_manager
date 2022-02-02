@@ -1,8 +1,11 @@
 package pl.cieslas.budgetmanager.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.YearMonth;
 
 @Entity
 public class Expense {
@@ -13,24 +16,37 @@ public class Expense {
     private String name;
     private String description;
     private BigDecimal amount;
-    @Column(name = "created_on")
-    private LocalDateTime created_on;
+    @Column(name = "created_on", updatable = false)
+    @CreationTimestamp
+    private LocalDate createdOn;
 
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    public Expense(Long id, String name, String description, BigDecimal amount, LocalDateTime created_on, Category category) {
+    public Expense(Long id, String name, String description, BigDecimal amount, LocalDate createdOn, User user, Category category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.amount = amount;
-        this.created_on = created_on;
+        this.createdOn = createdOn;
+        this.user = user;
+        this.category = category;
     }
 
     public Expense() {
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public User getUser() {
         return user;
@@ -72,12 +88,23 @@ public class Expense {
         this.amount = amount;
     }
 
-    public LocalDateTime getCreated_on() {
-        return created_on;
+
+    public LocalDate getCreatedOn() {
+        return createdOn;
     }
 
-    public void setCreated_on(LocalDateTime created_on) {
-        this.created_on = created_on;
+    public void setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
     }
+
+    @PrePersist
+    public void prePersist() {
+        createdOn = LocalDate.now();
+    }
+
+    public YearMonth getYearMonth() {
+        return YearMonth.from(createdOn);
+    }
+
 
 }

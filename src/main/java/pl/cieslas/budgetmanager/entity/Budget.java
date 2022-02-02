@@ -14,17 +14,18 @@ public class Budget {
     private String name;
     @Column(name = "budget_amount")
     private BigDecimal amount;
-    @OneToMany
-    private List<Category> categories;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
+    private List<Expense> expenses;
 
     @ManyToOne
     private User user;
 
-    public Budget(Long id, String name, BigDecimal amount, List<Category> categories) {
+    public Budget(Long id, String name, BigDecimal amount, List<Category> categories, User user) {
         this.id = id;
         this.name = name;
         this.amount = amount;
-        this.categories = categories;
+        this.user = user;
     }
 
     public Budget() {
@@ -62,12 +63,4 @@ public class Budget {
         this.amount = amount;
     }
 
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
 }

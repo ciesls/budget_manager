@@ -3,14 +3,18 @@ package pl.cieslas.budgetmanager.repository.expense;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.Expense;
 import pl.cieslas.budgetmanager.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Primary
+@Transactional
 public class ExpenseServiceImpl implements ExpenseService{
 
     private final ExpenseRepository expenseRepository;
@@ -22,8 +26,8 @@ public class ExpenseServiceImpl implements ExpenseService{
 
 
     @Override
-    public Optional<Expense> get(Long id) {
-        return Optional.empty();
+    public Optional<Expense> findById(Long id) {
+        return expenseRepository.findById(id);
     }
 
     @Override
@@ -37,9 +41,8 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public void deleteById(Long id) {
-        expenseRepository.deleteById(id);
-
+    public void deleteByIdAndUser(Long id, User user) {
+        expenseRepository.deleteByIdAndUser(id, user);
     }
 
     @Override
@@ -48,12 +51,29 @@ public class ExpenseServiceImpl implements ExpenseService{
     }
 
     @Override
-    public void add(Expense expense) {
+    public void update(Expense expense) {
 
     }
 
     @Override
-    public void update(Expense expense) {
-
+    public List<Expense> findAllByCategoryAndUser(Category category, User user) {
+        return expenseRepository.findAllByCategoryAndUser(category, user);
     }
+
+    @Override
+    public List<Expense> findAllByUserAndCreatedOnBetween(User user, LocalDate monthStart, LocalDate currentTime) {
+        return expenseRepository.findAllByUserAndCreatedOnBetween(user, monthStart, currentTime);
+    }
+
+    @Override
+    public List<Expense> findTop5ByUserOrderByIdDesc(User user) {
+        return expenseRepository.findTop5ByUserOrderByIdDesc(user);
+    }
+
+    @Override
+    public List<Expense> findAllByCategoryAndUserAndCreatedOnBetween(Category category, User user, LocalDate monthStart, LocalDate currentTime) {
+        return expenseRepository.findAllByCategoryAndUserAndCreatedOnBetween(category, user, monthStart, currentTime);
+    }
+
+
 }

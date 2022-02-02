@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
-public class Investment {
+public class Savings {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,14 +16,14 @@ public class Investment {
     private BigDecimal value;
     private String description;
 
-    public Investment(long id, String name, BigDecimal value, String description) {
+    public Savings(long id, String name, BigDecimal value, String description) {
         this.id = id;
         this.name = name;
         this.value = value;
         this.description = description;
     }
 
-    public Investment() {
+    public Savings() {
     }
 
     public long getId() {

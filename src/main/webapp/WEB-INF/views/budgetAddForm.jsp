@@ -15,6 +15,14 @@
     <title>Title</title>
 </head>
 <body>
-
+<%--@elvariable id="budget" type="pl.cieslas.budgetmanager.entity.Budget"--%>
+<form:form method="post"
+           modelAttribute="budget">
+    <label>Name:</label>
+    <form:input path="name" type="text"/><br>
+    <label>Amount:</label>
+    <form:input path="amount" type="number" step="0.01"/>
+    <input type="submit" value="Save">
+</form:form>
 </body>
 </html>

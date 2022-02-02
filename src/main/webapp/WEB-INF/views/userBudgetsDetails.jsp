@@ -15,6 +15,24 @@
     <title>Title</title>
 </head>
 <body>
+<table id="datatablesSimple">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Planned Amount</th>
+        <th>Spent this month amount</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
 
+    <tr>
+        <th>${budgetDetails.name}</th>
+        <th>${budgetDetails.amount}</th>
+        <th>${budgetSum}</th>
+        <th><a href="/budgets/edit/${budgetDetails.id}">Edit</a></th>
+        <th><a href="/budgets/delete/${budgetDetails.id}">Delete</a></th>
+    </tr>
+</table>
 </body>
 </html>

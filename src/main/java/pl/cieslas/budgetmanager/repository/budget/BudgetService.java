@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface BudgetService {
 
-    Optional<Budget> get(Long id);
+    Optional<Budget> findById(Long id);
 
-    Optional<Budget> getPerUser(Long id, User user);
+    Optional<Budget> findByUserAndIdOrderByAmountDesc(User user, Long id);
 
     List<Budget> findAllByUser(User user);
 
@@ -20,6 +20,5 @@ public interface BudgetService {
 
     void update(Budget budget);
 
-
-
+    Budget findByName(String name);
 }

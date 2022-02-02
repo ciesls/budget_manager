@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import pl.cieslas.budgetmanager.entity.Budget;
+import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.User;
 
 import java.util.List;
@@ -21,13 +22,13 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public Optional<Budget> get(Long id) {
-        return Optional.empty();
+    public Optional<Budget> findById(Long id) {
+        return budgetRepository.findById(id);
     }
 
     @Override
-    public Optional<Budget> getPerUser(Long id, User user) {
-        return budgetRepository.findByIdAndUser(id, user);
+    public Optional<Budget> findByUserAndIdOrderByAmountDesc(User user, Long id) {
+        return budgetRepository.findByUserAndIdOrderByAmountDesc(user, id);
     }
 
     @Override
@@ -48,6 +49,11 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public void update(Budget budget) {
         budgetRepository.save(budget);
+    }
+
+    @Override
+    public Budget findByName(String name) {
+        return budgetRepository.findByName(name);
     }
 
 }

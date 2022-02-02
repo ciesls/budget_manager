@@ -2,7 +2,6 @@ package pl.cieslas.budgetmanager.entity;
 
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Category {
@@ -10,22 +9,32 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "category_name")
+    @Column(name = "category_name", nullable = false)
     private String name;
 
-    @OneToMany
-    private List<Expense> expenses;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "budget_id")
+    private Budget budget;
 
     @ManyToOne
     private User user;
 
-    public Category(Long id, String name, List<Expense> expenses) {
+    public Category(Long id, String name, Budget budget, User user) {
         this.id = id;
         this.name = name;
-        this.expenses = expenses;
+        this.budget = budget;
+        this.user = user;
     }
 
     public Category() {
+    }
+
+    public Budget getBudget() {
+        return budget;
+    }
+
+    public void setBudget(Budget budget) {
+        this.budget = budget;
     }
 
     public Long getId() {
@@ -44,11 +53,11 @@ public class Category {
         this.name = name;
     }
 
-    public List<Expense> getExpenses() {
-        return expenses;
+    public User getUser() {
+        return user;
     }
 
-    public void setExpenses(List<Expense> expenses) {
-        this.expenses = expenses;
+    public void setUser(User user) {
+        this.user = user;
     }
 }
