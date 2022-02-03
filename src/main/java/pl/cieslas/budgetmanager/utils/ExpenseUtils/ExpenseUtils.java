@@ -29,21 +29,15 @@ public class ExpenseUtils {
 
     }
 
-    public Map<YearMonth, List<Expense>> groupExpensesByMonth(List<Expense> expenses) {
+    public Map<YearMonth, BigDecimal> groupExpensesByMonth(List<Expense> expenses) {
 
         BigDecimal sumPerMonthCategory = BigDecimal.ZERO;
 
         Map<YearMonth, List<Expense>> groupedByMonth = expenses.stream().collect(Collectors.groupingBy(Expense::getYearMonth));
-        Map<YearMonth, BigDecimal> sumPerMonthYear;
+        Map<YearMonth, BigDecimal> groupedSum = expenses.stream().collect(Collectors.groupingBy(Expense::getYearMonth, Collectors.mapping(Expense::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+        System.out.println(groupedSum);
 
-        for (List<Expense> groupedExpenses : groupedByMonth.values()) {
-            sumPerMonthCategory = sumPerMonthCategory.add(sumOfExpenses(groupedExpenses));
-//            System.out.println(sumPerMonthCategory);
-        }
-
-
-
-        return groupedByMonth;
+        return groupedSum;
 
     }
 

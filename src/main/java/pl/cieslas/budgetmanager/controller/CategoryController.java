@@ -62,7 +62,7 @@ public class CategoryController {
     public String addCategory(Category category, @AuthenticationPrincipal CurrentUser customUser) {
         category.setUser(customUser.getUser());
         categoryService.saveCategory(category);
-        return "categoryAddForm";
+        return "redirect:/categories/all";
     }
 
     // show all user's categories
@@ -75,19 +75,14 @@ public class CategoryController {
     // show expenses in category
     @GetMapping("/catExpenses/{id}")
     public String getAllExpensesFromCategory(@AuthenticationPrincipal CurrentUser customUser, Model model, @PathVariable long id) {
+        LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
+        LocalDate now = LocalDate.now();
         Optional<Category> category = categoryService.findById(id);
-
-//        grouping test
         List<Expense> expensesCategories = expenseService.findAllByCategoryAndUser(category.get(), customUser.getUser());
-        System.out.println(expenseUtils.groupExpensesByMonth(expensesCategories));
 
         model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser(category.get(), customUser.getUser()));
         model.addAttribute("categorySum", expenseUtils.sumOfExpenses(expenseService.findAllByCategoryAndUser(
                 category.get(), customUser.getUser())));
-
-        LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
-        LocalDate now = LocalDate.now();
-
         model.addAttribute("monthSum", expenseUtils.sumOfExpenses(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
                 category.get(), customUser.getUser(), monthStart, now)));
 

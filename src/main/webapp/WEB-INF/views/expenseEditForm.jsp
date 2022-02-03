@@ -26,9 +26,11 @@
     <label>Amount:</label>
     <form:input path="amount" type="number" step="0.01"/>
     <label>Category:</label>
-    <form:select path="category.name" multiple="false" itemValue="name">
+    <form:select path="category.id" multiple="false" itemValue="name">
         <c:forEach var="category" items="${categories}">
-            <form:option value="${category.name}"/>
+            <form:option value="${category.id}">
+                ${category.name}
+            </form:option>
         </c:forEach>
     </form:select>
     <input type="submit" value="Save">

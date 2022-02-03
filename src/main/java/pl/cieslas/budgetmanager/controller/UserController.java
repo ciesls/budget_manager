@@ -13,7 +13,7 @@ import pl.cieslas.budgetmanager.security.UserService;
 import pl.cieslas.budgetmanager.utils.UserUtils.UserUtils;
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user/")
 public class UserController {
 
     private final UserService userService;
@@ -36,10 +36,11 @@ public class UserController {
     public String createUser(User user) {
         userService.saveUser(user);
         userUtils.addDefaults(user);
-        return "registerForm";
+        return "redirect:/Dashboard";
     }
 
     @GetMapping("/admin")
+    @ResponseBody
     public String admin(@AuthenticationPrincipal CurrentUser customUser) {
         User entityUser = customUser.getUser();
         return "Hello " + entityUser.getUsername();
@@ -47,7 +48,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "loginForm";
+        return "redirect:/dashboard";
     }
 
 

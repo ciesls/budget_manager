@@ -15,8 +15,8 @@ public class Budget {
     @Column(name = "budget_amount")
     private BigDecimal amount;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
-    private List<Expense> expenses;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
+//    private List<Expense> expenses;
 
     @ManyToOne
     private User user;

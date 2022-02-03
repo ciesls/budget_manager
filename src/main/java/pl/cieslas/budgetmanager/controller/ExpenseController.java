@@ -89,7 +89,6 @@ public class ExpenseController {
     }
 
     @GetMapping("/delete/{id}")
-    @Transactional
     public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser customUser) {
         expenseService.deleteByIdAndUser(id, customUser.getUser());
         return "redirect:/expenses/all";

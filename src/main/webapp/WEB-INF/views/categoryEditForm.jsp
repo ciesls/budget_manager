@@ -23,9 +23,10 @@
     <label>Name:</label>
     <form:input path="name" type="text"/><br>
     <label>Budget:</label>
-    <form:select path="budget.name" multiple="false" itemValue="name">
+    <form:select path="budget.id" multiple="false" itemValue="name">
         <c:forEach var="budget" items="${budgets}">
-            <form:option value="${budget.name}"/>
+            <form:option value="${budget.id}"/>
+            ${budget.name}
         </c:forEach>
     </form:select>
     <input type="submit" value="Save">

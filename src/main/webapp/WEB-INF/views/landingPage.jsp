@@ -15,6 +15,21 @@
     <title>Title</title>
 </head>
 <body>
+Application for budget management.
+
+Instructions:
+<br>
+Add budget first
+<br>
+Then add category or several categories for a budget
+<br>
+Add expense at the end
+
+
+
+<br>
+<th><a href="/dashboard">Go to your app</a></th>
+<th><a href="/user/register">Create account</a></th>
 
 </body>
 </html>

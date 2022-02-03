@@ -34,5 +34,22 @@
     </tr>
     </c:forEach>
 </table>
+
+<br>
+<th><a href="/expenses/all">Expenses</a></th>
+<br>
+<th><a href="/categories/all">Categories</a></th>
+<br>
+<th><a href="/budgets/all">Budgets</a></th>
+<br>
+<br>
+<br>
+
+<th><a href="/expenses/add">Add Expense</a></th>
+<br>
+<th><a href="/categories/add">Add Category</a></th>
+<br>
+<th><a href="/budgets/add">Add Budget</a></th>
+<br>
 </body>
 </html>

@@ -23,7 +23,6 @@
         <th>Created on</th>
         <th>Description</th>
         <th>Category</th>
-        <th>**Placeholder**</th>
     </tr>
     </thead>
 <c:forEach var="expense" items="${expensesCategories}">
@@ -34,7 +33,6 @@
         <th>${localDateTimeFormat.format(expense.createdOn)}</th>
         <th>${expense.description}</th>
         <th>${expense.category.name}</th>
-        <th>**Placeholder</th>
     </tr>
     </c:forEach>
 </table>
@@ -45,7 +43,7 @@
 Total expenses
 ${categorySum}
 <br>
-Sum per month
+Spent in current month
 ${monthSum}
 
 </body>

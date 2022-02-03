@@ -1,6 +1,8 @@
 package pl.cieslas.budgetmanager.entity;
 
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 
 @Entity

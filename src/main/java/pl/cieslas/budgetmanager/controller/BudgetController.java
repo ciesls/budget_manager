@@ -89,8 +89,10 @@ public class BudgetController {
         LocalDate now = LocalDate.now();
         Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(customUser.getUser(), id);
         budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
+//      get categories from budget
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(customUser.getUser(), budget);
         model.addAttribute("categoriesBudget", budgetCategories);
+//      get sum of expenses in budget in current month
         model.addAttribute("budgetSum", budgetUtils.calculateExpensesInBudget(budgetCategories, customUser.getUser(), monthStart, now));
 
         return "userBudgetsDetails";

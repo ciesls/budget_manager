@@ -31,7 +31,10 @@
 <br>
 <th><a href="/budgets/add">Add Budget</a></th>
 <br>
-
+<br>
+<a href="<c:url value="/logout" />">Logout</a>
+<br>
+Current month expenses
 <table id="datatablesSimple">
     <thead>
     <tr>
@@ -61,6 +64,7 @@
 <br>
 <br>
 
+Last 5 expenses
 <table>
     <thead>
     <tr>
@@ -91,21 +95,43 @@
 <br>
 <br>
 <br>
+Category stats
+<form:form method="post" action="/stats/categoryStats">
+    <label>Start Date:</label>
+    <input type="date" name="startDate"/><br>
+    <label>EndDate:</label>
+    <input type="date" name="endDate"/><br>
+    <label>Category:</label>
+    <select name="category" multiple="false">
+        <c:forEach var="category" items="${categories}">
+            <option value="${category.id}">
+                    ${category.name}
+            </option>
+        </c:forEach>
+    </select>
+    <input type="submit" value="Save">
+</form:form>
 
-<%--<form:form method="post" action="/stats/categoriesMonth">--%>
-<%--    <label>Start Date:</label>--%>
-<%--    <form:input type="date" path="startDate"/><br>--%>
-<%--    <label>EndDate:</label>--%>
-<%--    <form:input type="date" path="endDate"/><br>--%>
-<%--    <label>Category:</label>--%>
-<%--    <form:select path="category.id" multiple="false" itemValue="name">--%>
-<%--        <c:forEach var="category" items="${categories}">--%>
-<%--            <form:option value="${category.id}">--%>
-<%--                ${category.name}--%>
-<%--            </form:option>--%>
-<%--        </c:forEach>--%>
-<%--    </form:select>--%>
-<%--    <input type="submit" value="Save">--%>
-<%--</form:form>--%>
+<br>
+<br>
+<br>
+
+Budget stats
+<form:form method="post" action="/stats/budgetStats">
+    <label>Start Date:</label>
+    <input type="date" name="startDate"/><br>
+    <label>EndDate:</label>
+    <input type="date" name="endDate"/><br>
+    <label>Budget:</label>
+    <select name="budget" multiple="false">
+        <c:forEach var="budget" items="${budgets}">
+            <option value="${budget.id}">
+                    ${budget.name}
+            </option>
+        </c:forEach>
+    </select>
+    <input type="submit" value="Save">
+</form:form>
+
 </body>
 </html>

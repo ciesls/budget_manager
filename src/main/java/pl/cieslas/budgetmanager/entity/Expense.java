@@ -23,7 +23,7 @@ public class Expense {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
 
