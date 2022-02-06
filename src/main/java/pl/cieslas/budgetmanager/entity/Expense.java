@@ -17,7 +17,7 @@ public class Expense {
     private Long id;
     private String name;
     private String description;
-    @DecimalMin(value = "0.01", message = "amount must be bigger than zero")
+    @DecimalMin(value = "0.01", message = "Amount must be bigger than zero")
     private BigDecimal amount;
     @Column(name = "created_on", updatable = false)
     @CreationTimestamp

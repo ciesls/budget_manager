@@ -92,7 +92,7 @@
                     </table>
 
                     <br>
-                    Categories sum - for now all wil be top 3
+                    Top 5 categories this month
                     <table>
                         <thead>
                         <tr>
@@ -102,7 +102,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <c:forEach var="entry" items="${categoriesSum}">
+                            <c:forEach var="entry" items="${categoriesSum}" begin="0" end="4">
                             <td>${entry.key.name}</td>
                             <td>${entry.value}</td>
                         </tr>

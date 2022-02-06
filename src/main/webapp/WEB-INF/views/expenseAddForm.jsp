@@ -68,7 +68,9 @@
                                                             <form:input path="amount" class="form-control"
                                                                         id="budgetAmount"
                                                                         type="number" step="0.01"
-                                                                        placeholder="Amount"></form:input>
+                                                                        placeholder="Amount" ></form:input>
+                                                            <form:errors path="amount"
+                                                                         cssClass="error" />
                                                             <label for="budgetAmount">Expense Amount</label>
                                                         </div>
                                                         <div class="form-floating mb-3">

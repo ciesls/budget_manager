@@ -61,6 +61,8 @@
                                                                         id="budgetAmount"
                                                                         type="number" step="0.01"
                                                                         placeholder="Planned spendings"></form:input>
+                                                            <form:errors path="amount"
+                                                                         cssClass="error" />
                                                             <label for="budgetAmount">Budget Amount</label>
                                                         </div>
                                                     </div>

@@ -4,6 +4,7 @@ package pl.cieslas.budgetmanager.controller;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import pl.cieslas.budgetmanager.security.CurrentUser;
 import pl.cieslas.budgetmanager.security.UserService;
 import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +51,10 @@ public class BudgetController {
 
     //  add new budget
     @PostMapping("/add")
-    public String addBudget(Budget budget, @AuthenticationPrincipal CurrentUser customUser) {
+    public String addBudget(@Valid Budget budget, BindingResult result, @AuthenticationPrincipal CurrentUser customUser) {
+        if (result.hasErrors()){
+            return "budgetAddForm";
+        }
         budget.setUser(customUser.getUser());
         budgetService.saveBudget(budget);
         return "redirect:/budgets/all";

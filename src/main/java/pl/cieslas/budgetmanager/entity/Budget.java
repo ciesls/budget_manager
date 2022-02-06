@@ -1,6 +1,7 @@
 package pl.cieslas.budgetmanager.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class Budget {
     @Column(name = "budget_name")
     private String name;
     @Column(name = "budget_amount")
+    @DecimalMin(value = "0.01", message = "Amount must be bigger than zero")
     private BigDecimal amount;
 
     @ManyToOne
