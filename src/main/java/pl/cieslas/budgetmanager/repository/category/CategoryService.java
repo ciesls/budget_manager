@@ -1,6 +1,5 @@
 package pl.cieslas.budgetmanager.repository.category;
 
-import org.springframework.transaction.annotation.Transactional;
 import pl.cieslas.budgetmanager.entity.Budget;
 import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.User;
@@ -22,9 +21,9 @@ public interface CategoryService {
 
     Optional<Category> findById(Long id);
 
-    Category findByName(String name);
+    Category findByNameAndUser(String name, User user);
 
-    List<Category> findAllByUserAndBudget(User user, Optional<Budget> budget);
+    List<Category> findAllByUserAndBudget(User user, Budget budget);
 
 
 }

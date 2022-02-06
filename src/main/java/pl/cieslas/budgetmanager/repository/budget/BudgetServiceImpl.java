@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import pl.cieslas.budgetmanager.entity.Budget;
-import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.User;
 
 import java.util.List;
@@ -52,8 +51,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public Budget findByName(String name) {
-        return budgetRepository.findByName(name);
+    public Budget findByNameAndUser(String name, User user) {
+        return budgetRepository.findByNameAndUser(name, user);
     }
 
 }

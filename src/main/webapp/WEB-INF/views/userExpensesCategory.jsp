@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: szymonciesla
-  Date: 20/01/2022
-  Time: 21:58
+  Date: 04/02/2022
+  Time: 21:20
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -10,41 +10,77 @@
            uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<link href="<c:url value="/resources/css/styles.css" />" rel="stylesheet">
+<script src="<c:url value="/resources/js/scripts.js" />"></script>
 <html>
 <head>
-    <title>Title</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>BudgetManager</title>
+    <link href="css/styles.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+            crossorigin="anonymous"></script>
 </head>
-<body>
-<table id="datatablesSimple">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Created on</th>
-        <th>Description</th>
-        <th>Category</th>
-    </tr>
-    </thead>
-<c:forEach var="expense" items="${expensesCategories}">
+<body class="sb-nav-fixed">
+<jsp:include page="topNavBar.jsp"/>
+<div id="layoutSidenav">
+    <jsp:include page="leftNavBar.jsp"/>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <div class="card mb-4">
+                </div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Amount</th>
+                                <th>Created on</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Details</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <c:forEach var="expense" items="${expensesCategories}">
+                                <tr>
+                                    <td>${expense.name}</td>
+                                    <td>${expense.amount}</td>
+                                    <td>${localDateTimeFormat.format(expense.createdOn)}</td>
+                                    <td>${expense.description}</td>
+                                    <td>${expense.category.name}</td>
+                                    <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
+                                    <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
+                                    <td><a href="/expenses/details/{id}/${expense.id}">Details</a></td>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
 
-    <tr>
-        <th>${expense.name}</th>
-        <th>${expense.amount}</th>
-        <th>${localDateTimeFormat.format(expense.createdOn)}</th>
-        <th>${expense.description}</th>
-        <th>${expense.category.name}</th>
-    </tr>
-    </c:forEach>
-</table>
-<br>
-<br>
-<br>
+        Total expenses
+        ${categorySum}
+        <br>
+        Spent in current month
+        ${monthSum}
 
-Total expenses
-${categorySum}
-<br>
-Spent in current month
-${monthSum}
-
+        <jsp:include page="footer.jsp"/>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script src="js/datatables-simple-demo.js"></script>
 </body>
 </html>

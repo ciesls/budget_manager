@@ -3,10 +3,7 @@ package pl.cieslas.budgetmanager.controller;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.cieslas.budgetmanager.entity.Budget;
 import pl.cieslas.budgetmanager.entity.Category;
@@ -33,12 +30,23 @@ public class StatsController {
     private final BudgetUtils budgetUtils;
 
 
-    public StatsController(CategoryService categoryService, ExpenseUtils expenseUtils, ExpenseService expenseService, BudgetService budgetService, BudgetUtils budgetUtils) {
+    public StatsController(CategoryService categoryService, ExpenseUtils expenseUtils, ExpenseService expenseService,
+                           BudgetService budgetService, BudgetUtils budgetUtils) {
         this.categoryService = categoryService;
         this.expenseUtils = expenseUtils;
         this.expenseService = expenseService;
         this.budgetService = budgetService;
         this.budgetUtils = budgetUtils;
+    }
+
+    @ModelAttribute("budgets")
+    public List<Budget> budgets(@AuthenticationPrincipal CurrentUser customUser) {
+        return budgetService.findAllByUser(customUser.getUser());
+    }
+
+    @ModelAttribute("categories")
+    public List<Category> categories(@AuthenticationPrincipal CurrentUser customUser) {
+        return categoryService.findAllByUser(customUser.getUser());
     }
 
     @PostMapping("/categoryStats")
@@ -49,7 +57,8 @@ public class StatsController {
 
 // find category expenses in given period, group them and pass them to categoryStats view
         Optional<Category> category = categoryService.findById(categoryID);
-        List<Expense> expenses = expenseService.findAllByCategoryAndUserAndCreatedOnBetween(category.get(), currentUser.getUser(), startDate, endDate);
+        List<Expense> expenses = expenseService.findAllByCategoryAndUserAndCreatedOnBetween(category.get(),
+                currentUser.getUser(), startDate, endDate);
         redirectAttributes.addFlashAttribute("category", category.get());
         redirectAttributes.addFlashAttribute("groupedByCategory", expenseUtils.groupExpensesByMonth(expenses));
 
@@ -62,6 +71,18 @@ public class StatsController {
         return "categoriesStats";
     }
 
+    @GetMapping("/budgetStatsForm")
+    public String budgetStatsForm(){
+        return "budgetStatsForm";
+    }
+
+
+    @GetMapping("/categoriesStatsForm")
+    public String categoriesStatsForm(){
+        return "categoriesStatsForm";
+    }
+
+
     @PostMapping("/budgetStats")
     public String budgetStats(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                               @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
@@ -69,9 +90,8 @@ public class StatsController {
                               @RequestParam("budget") long budgetID, RedirectAttributes redirectAttributes) {
 
         Optional<Budget> budget = budgetService.findById(budgetID);
-        List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget);
+        List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         List<Expense> expensesBudget = budgetUtils.getBudgetExpenses(categoriesBudget, currentUser.getUser());
-        System.out.println(expensesBudget);
         redirectAttributes.addFlashAttribute("expensesGrouped", expenseUtils.groupExpensesByMonth(expensesBudget));
         redirectAttributes.addFlashAttribute("budget", budget.get());
         return "redirect:/stats/budgetStats";

@@ -31,7 +31,8 @@ public class BudgetController {
     private final BudgetUtils budgetUtils;
     private final ExpenseService expenseService;
 
-    public BudgetController(BudgetService budgetService, UserService userService, CategoryService categoryService, BudgetUtils budgetUtils, ExpenseService expenseService) {
+    public BudgetController(BudgetService budgetService, UserService userService, CategoryService categoryService,
+                            BudgetUtils budgetUtils, ExpenseService expenseService) {
         this.budgetService = budgetService;
         this.userService = userService;
         this.categoryService = categoryService;
@@ -56,8 +57,8 @@ public class BudgetController {
 
     //  get all users details
     @GetMapping("/all")
-    public String getUserBudgets(@AuthenticationPrincipal CurrentUser customUser, Model model) {
-        model.addAttribute("budgets", budgetService.findAllByUser(customUser.getUser()));
+    public String getUserBudgets(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        model.addAttribute("budgets", budgetService.findAllByUser(currentUser.getUser()));
         return "userBudgets";
 
     }
@@ -71,8 +72,8 @@ public class BudgetController {
 
     //    edit budget
     @PostMapping("/edit/{id}")
-    public String editBudget(Budget budget, @AuthenticationPrincipal CurrentUser customUser) {
-        budget.setUser(customUser.getUser());
+    public String editBudget(Budget budget, @AuthenticationPrincipal CurrentUser currentUser) {
+        budget.setUser(currentUser.getUser());
         budgetService.saveBudget(budget);
         return "redirect:/budgets/all";
     }
@@ -84,28 +85,48 @@ public class BudgetController {
     }
 
     @GetMapping("/details/{id}")
-    public String getBudgeDetails(@PathVariable long id, @AuthenticationPrincipal CurrentUser customUser, Model model) {
+    public String getBudgeDetails(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
-        Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(customUser.getUser(), id);
+        Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(currentUser.getUser(), id);
         budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
 //      get categories from budget
-        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(customUser.getUser(), budget);
+        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 //      get sum of expenses in budget in current month
-        model.addAttribute("budgetSum", budgetUtils.calculateExpensesInBudget(budgetCategories, customUser.getUser(), monthStart, now));
+        model.addAttribute("budgetSum", budgetUtils.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), monthStart, now));
 
         return "userBudgetsDetails";
     }
 
     //    show categories in budget
     @GetMapping("/budgetCategories/{id}")
-    public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser customUser, @PathVariable long id, Model model) {
+    public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id, Model model) {
         Optional<Budget> budget = budgetService.findById(id);
-        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(customUser.getUser(), budget);
+        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 
         return "userCategoriesBudgets";
     }
 
+    //    show all expenses in budget
+    @GetMapping("/budgetExpenses/{id}")
+    public String getAllExpensesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, Model model, @PathVariable long id) {
+        Optional<Budget> budget = budgetService.findById(id);
+        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
+        model.addAttribute("budgetExpenses", budgetUtils.getBudgetExpenses(budgetCategories, currentUser.getUser()));
+        return "userBudgetExpenses";
+    }
+
+    //    delete budget and set its categories do Other
+    @GetMapping("/delete/{id}")
+    public String deleteBudget(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
+        Optional<Budget> budget = budgetService.findById(id);
+        List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
+        budgetUtils.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
+        budgetService.deleteById(id);
+
+        return "redirect:/budgets/all";
+
+    }
 }

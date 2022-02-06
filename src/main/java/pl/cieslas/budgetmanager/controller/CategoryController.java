@@ -13,6 +13,7 @@ import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
 import pl.cieslas.budgetmanager.security.UserService;
 import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
+import pl.cieslas.budgetmanager.utils.CategoryUtils.CategoryUtils;
 import pl.cieslas.budgetmanager.utils.ExpenseUtils.ExpenseUtils;
 
 import java.time.LocalDate;
@@ -29,14 +30,19 @@ public class CategoryController {
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
     private final ExpenseUtils expenseUtils;
+    private final CategoryUtils categoryUtils;
 
 
-    public CategoryController(UserService userService, CategoryService categoryService, BudgetService budgetService, ExpenseService expenseService, ExpenseUtils expenseUtils, BudgetUtils budgetUtils) {
+    public CategoryController(UserService userService, CategoryService categoryService, BudgetService budgetService,
+                              ExpenseService expenseService, ExpenseUtils expenseUtils,
+                              CategoryUtils categoryUtils) {
+
         this.userService = userService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.expenseService = expenseService;
         this.expenseUtils = expenseUtils;
+        this.categoryUtils = categoryUtils;
     }
 
     @ModelAttribute("localDateTimeFormat")
@@ -46,8 +52,8 @@ public class CategoryController {
     }
 
     @ModelAttribute("budgets")
-    public List<Budget> budgets(@AuthenticationPrincipal CurrentUser customUser) {
-        return budgetService.findAllByUser(customUser.getUser());
+    public List<Budget> budgets(@AuthenticationPrincipal CurrentUser currentUser) {
+        return budgetService.findAllByUser(currentUser.getUser());
     }
 
     //show category form
@@ -59,32 +65,35 @@ public class CategoryController {
 
     //add new category
     @PostMapping("/add")
-    public String addCategory(Category category, @AuthenticationPrincipal CurrentUser customUser) {
-        category.setUser(customUser.getUser());
+    public String addCategory(Category category, @AuthenticationPrincipal CurrentUser currentUser) {
+        category.setUser(currentUser.getUser());
         categoryService.saveCategory(category);
         return "redirect:/categories/all";
     }
 
     // show all user's categories
     @GetMapping("/all")
-    public String getAllUsersCategories(@AuthenticationPrincipal CurrentUser customUser, Model model) {
-        model.addAttribute("categories", categoryService.findAllByUser(customUser.getUser()));
+    public String getAllUsersCategories(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        model.addAttribute("categories", categoryService.findAllByUser(currentUser.getUser()));
         return "userCategories";
     }
 
     // show expenses in category
     @GetMapping("/catExpenses/{id}")
-    public String getAllExpensesFromCategory(@AuthenticationPrincipal CurrentUser customUser, Model model, @PathVariable long id) {
+    public String getAllExpensesFromCategory(@AuthenticationPrincipal CurrentUser currentUser, Model model,
+                                             @PathVariable long id) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         Optional<Category> category = categoryService.findById(id);
-        List<Expense> expensesCategories = expenseService.findAllByCategoryAndUser(category.get(), customUser.getUser());
 
-        model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser(category.get(), customUser.getUser()));
-        model.addAttribute("categorySum", expenseUtils.sumOfExpenses(expenseService.findAllByCategoryAndUser(
-                category.get(), customUser.getUser())));
-        model.addAttribute("monthSum", expenseUtils.sumOfExpenses(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
-                category.get(), customUser.getUser(), monthStart, now)));
+        model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
+                (category.get(), currentUser.getUser()));
+        model.addAttribute("categorySum", expenseUtils.sumOfExpenses
+                (expenseService.findAllByCategoryAndUser(
+                category.get(), currentUser.getUser())));
+        model.addAttribute("monthSum", expenseUtils.sumOfExpenses
+                (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
+                category.get(), currentUser.getUser(), monthStart, now)));
 
         return "userExpensesCategory";
     }
@@ -98,10 +107,22 @@ public class CategoryController {
 
     //    edit category
     @PostMapping("/edit/{id}")
-    public String editCategory(Category category, @AuthenticationPrincipal CurrentUser customUser) {
-        category.setUser(customUser.getUser());
+    public String editCategory(Category category, @AuthenticationPrincipal CurrentUser currentUser) {
+        category.setUser(currentUser.getUser());
         categoryService.saveCategory(category);
         return "redirect:/categories/all";
     }
+
+//    delete category
+    @GetMapping("/delete/{id}")
+    public String deleteCategory(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
+        Optional<Category> category = categoryService.findById(id);
+        List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser());
+        categoryUtils.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
+        categoryService.deleteById(id);
+
+        return "redirect:/categories/all";
+    }
+
 
 }

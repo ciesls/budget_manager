@@ -2,8 +2,8 @@ package pl.cieslas.budgetmanager.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.Expense;
@@ -12,6 +12,7 @@ import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
 import pl.cieslas.budgetmanager.security.UserService;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -43,7 +44,7 @@ public class ExpenseController {
     }
 
 
-    @RequestMapping("/all")
+    @GetMapping("/all")
     public String getAllUserExpenses(@AuthenticationPrincipal CurrentUser customUser, Model model) {
         model.addAttribute("expenses", expenseService.findAllByUser(customUser.getUser()));
         return "userExpenses";
@@ -52,7 +53,7 @@ public class ExpenseController {
     @GetMapping("/details/{id}")
     public String getExpense(@AuthenticationPrincipal CurrentUser customUser, @PathVariable long id, Model model) {
         Optional<Expense> expense = expenseService.getPerUser(id, customUser.getUser());
-        if (expense.isPresent()){
+        if (expense.isPresent()) {
             model.addAttribute("expense", expense.get());
         }
         return "userExpensesDetails";
@@ -66,7 +67,10 @@ public class ExpenseController {
     }
 
     @PostMapping("/add")
-    public String addExpense(@AuthenticationPrincipal CurrentUser customUser, Expense expense) {
+    public String addExpense(@AuthenticationPrincipal CurrentUser customUser, @Valid Expense expense, BindingResult result) {
+        if (result.hasErrors()) {
+            return "expenseAddForm";
+        }
         expense.setUser(customUser.getUser());
         expense.setCreatedOn(LocalDate.now());
         expenseService.saveExpense(expense);

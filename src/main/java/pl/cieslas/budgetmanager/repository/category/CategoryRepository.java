@@ -21,9 +21,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Category save(Category category);
 
-    Category findByName(String name);
+    Category findByNameAndUser(String name, User user);
 
-    List<Category> findAllByUserAndBudget(User user, Optional<Budget> budget);
+    List<Category> findAllByUserAndBudget(User user, Budget budget);
 
 
 }

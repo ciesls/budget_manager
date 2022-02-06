@@ -3,6 +3,7 @@ package pl.cieslas.budgetmanager.entity;
 import pl.cieslas.budgetmanager.security.Role;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 60)
     private String username;
     private String password;
+    @Email
     private String email;
     private int enabled;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -1,9 +1,6 @@
 package pl.cieslas.budgetmanager.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -11,12 +8,15 @@ public class Savings {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String name;
     private BigDecimal value;
     private String description;
 
-    public Savings(long id, String name, BigDecimal value, String description) {
+    @ManyToOne
+    private User user;
+
+    public Savings(Long id, String name, BigDecimal value, String description) {
         this.id = id;
         this.name = name;
         this.value = value;
@@ -26,13 +26,6 @@ public class Savings {
     public Savings() {
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -56,5 +49,17 @@ public class Savings {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

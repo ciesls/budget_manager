@@ -20,5 +20,5 @@ public interface BudgetService {
 
     void update(Budget budget);
 
-    Budget findByName(String name);
+    Budget findByNameAndUser(String name, User user);
 }

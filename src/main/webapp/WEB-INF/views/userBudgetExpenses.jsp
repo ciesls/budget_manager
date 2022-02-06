@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: szymonciesla
+  Date: 04/02/2022
+  Time: 21:20
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form"
            uri="http://www.springframework.org/tags/form" %>
@@ -32,20 +39,28 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
+                                <th>Amount</th>
+                                <th>Created on</th>
+                                <th>Description</th>
+                                <th>Category</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
-                                <th>Show expenses in category</th>
+                                <th>Details</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="category" items="${categoriesBudget}">
-                                <tr>
-                                    <td>${category.name}</td>
-                                    <td><a href="/budgets/edit/${cat.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${cat.id}">Delete</a></td>
-                                    <td><a href="/categories/catExpenses/${category.id}">Expenses</a></td>
-                                </tr>
-                            </c:forEach>
+<c:forEach var="expense" items="${budgetExpenses}">
+                            <tr>
+                                <td>${expense.name}</td>
+                                <td>${expense.amount}</td>
+                                <td>${localDateTimeFormat.format(expense.createdOn)}</td>
+                                <td>${expense.description}</td>
+                                <td>${expense.category.name}</td>
+                                <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
+                                <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
+                                <td><a href="/expenses/details/${expense.id}">Details</a></td>
+                            </tr>
+</c:forEach>
                             </tbody>
                         </table>
                     </div>

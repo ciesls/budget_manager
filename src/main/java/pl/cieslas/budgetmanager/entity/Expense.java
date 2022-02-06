@@ -3,6 +3,8 @@ package pl.cieslas.budgetmanager.entity;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -15,6 +17,7 @@ public class Expense {
     private Long id;
     private String name;
     private String description;
+    @DecimalMin(value = "0.01", message = "amount must be bigger than zero")
     private BigDecimal amount;
     @Column(name = "created_on", updatable = false)
     @CreationTimestamp

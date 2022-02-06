@@ -53,12 +53,12 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public Category findByName(String name) {
-        return categoryRepository.findByName(name);
+    public Category findByNameAndUser(String name, User user) {
+        return categoryRepository.findByNameAndUser(name, user);
     }
 
     @Override
-    public List<Category> findAllByUserAndBudget(User user, Optional<Budget> budget) {
+    public List<Category> findAllByUserAndBudget(User user, Budget budget) {
         return categoryRepository.findAllByUserAndBudget(user, budget);
     }
 
