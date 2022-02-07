@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: szymonciesla
+  Date: 04/02/2022
+  Time: 21:20
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form"
            uri="http://www.springframework.org/tags/form" %>
@@ -18,9 +25,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<jsp:include page="topNavBar.jsp"/>
+<jsp:include page="../staticElements/topNavBar.jsp"/>
 <div id="layoutSidenav">
-    <jsp:include page="leftNavBar.jsp"/>
+    <jsp:include page="../staticElements/leftNavBar.jsp"/>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -32,27 +39,35 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Planned Amount</th>
-                                <th>Spent this month amount</th>
+                                <th>Amount</th>
+                                <th>Created on</th>
+                                <th>Description</th>
+                                <th>Category</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
+                                <th>Details</th>
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>${budgetDetails.name}</td>
-                                    <td>${budgetDetails.amount}</td>
-                                    <td>${budgetSum}</td>
-                                    <td><a href="/budgets/edit/${budgetDetails.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${budgetDetails.id}">Delete</a></td>
-                                </tr>
+<c:forEach var="expense" items="${expenses}">
+                            <tr>
+                                <td>${expense.name}</td>
+                                <td>${expense.amount}</td>
+                                <td>${localDateTimeFormat.format(expense.createdOn)}</td>
+                                <td>${expense.description}</td>
+                                <td>${expense.category.name}</td>
+                                <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
+                                <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
+                                <td><a href="/expenses/details/${expense.id}">Details</a></td>
+                            </tr>
+</c:forEach>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </main>
-        <jsp:include page="footer.jsp"/>
+        <jsp:include page="../staticElements/footer.jsp"/>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

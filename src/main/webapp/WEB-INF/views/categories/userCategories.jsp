@@ -1,3 +1,10 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: szymonciesla
+  Date: 04/02/2022
+  Time: 21:20
+  To change this template use File | Settings | File Templates.
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form"
            uri="http://www.springframework.org/tags/form" %>
@@ -18,9 +25,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<jsp:include page="topNavBar.jsp"/>
+<jsp:include page="../staticElements/topNavBar.jsp"/>
 <div id="layoutSidenav">
-    <jsp:include page="leftNavBar.jsp"/>
+    <jsp:include page="../staticElements/leftNavBar.jsp"/>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -32,24 +39,18 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Amount</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
-                                <th>Details</th>
-                                <th>Show categories in budget</th>
-                                <th>Show expenses in budget</th>
+                                <th>Show expenses in category</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="budget" items="${budgets}">
+                            <c:forEach var="category" items="${categories}">
                                 <tr>
-                                    <td>${budget.name}</td>
-                                    <td>${budget.amount}</td>
-                                    <td><a href="/budgets/edit/${budget.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${budget.id}">Delete</a></td>
-                                    <td><a href="/budgets/details/${budget.id}">Details</a></td>
-                                    <td><a href="/budgets/budgetCategories/${budget.id}">Show categories in budget</a></td>
-                                    <td><a href="/budgets/budgetExpenses/${budget.id}">Show expenses in budget</a></td>
+                                    <td>${category.name}</td>
+                                    <td><a href="/categories/edit/${category.id}">Edit</a></td>
+                                    <td><a href="/categories/delete/${category.id}">Delete</a></td>
+                                    <td><a href="/categories/catExpenses/${category.id}">Expenses</a></td>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -58,7 +59,7 @@
                 </div>
             </div>
         </main>
-        <jsp:include page="footer.jsp"/>
+        <jsp:include page="../staticElements/footer.jsp"/>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

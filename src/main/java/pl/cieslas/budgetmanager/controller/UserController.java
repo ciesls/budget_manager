@@ -28,7 +28,7 @@ public class UserController {
     @GetMapping("/register")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
-        return "registerForm";
+        return "user/registerForm";
     }
 
     //  add new user
@@ -36,7 +36,7 @@ public class UserController {
     public String createUser(User user) {
         userService.saveUser(user);
         userUtils.addDefaults(user);
-        return "redirect:/Dashboard";
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/admin")

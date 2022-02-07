@@ -14,7 +14,7 @@ public class Budget {
     @Column(name = "budget_name")
     private String name;
     @Column(name = "budget_amount")
-    @DecimalMin(value = "0.01", message = "Amount must be bigger than zero")
+    @DecimalMin(value = "0.00", message = "Amount must be bigger than or equal to zero")
     private BigDecimal amount;
 
     @ManyToOne

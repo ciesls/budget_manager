@@ -19,9 +19,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<jsp:include page="topNavBar.jsp"/>
+<jsp:include page="../staticElements/topNavBar.jsp"/>
 <div id="layoutSidenav">
-    <jsp:include page="leftNavBar.jsp"/>
+    <jsp:include page="../staticElements/leftNavBar.jsp"/>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -87,7 +87,7 @@
     </div>
 
 
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../staticElements/footer.jsp"/>
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

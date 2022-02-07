@@ -5,38 +5,6 @@
   Time: 21:58
   To change this template use File | Settings | File Templates.
 --%>
-<%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
-<%--<%@ taglib prefix="form"--%>
-<%--           uri="http://www.springframework.org/tags/form" %>--%>
-<%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>--%>
-<%--<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>--%>
-<%--<html>--%>
-<%--<head>--%>
-<%--    <title>Title</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-<%--&lt;%&ndash;@elvariable id="budget" type="pl.cieslas.budgetmanager.entity.Budget"&ndash;%&gt;--%>
-<%--<form:form method="post"--%>
-<%--           modelAttribute="budget">--%>
-
-<%--    <form:hidden path="id"/>--%>
-
-<%--    <label>Name:</label>--%>
-<%--    <form:input path="name" type="text"/><br>--%>
-<%--    <label>Amount:</label>--%>
-<%--    <form:input path="amount" type="number" step="0.01"/>--%>
-<%--    <input type="submit" value="Save">--%>
-<%--</form:form>--%>
-<%--</body>--%>
-<%--</html>--%>
-
-<%--
-  Created by IntelliJ IDEA.
-  User: szymonciesla
-  Date: 20/01/2022
-  Time: 21:58
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="form"
            uri="http://www.springframework.org/tags/form" %>
@@ -58,9 +26,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<jsp:include page="topNavBar.jsp"/>
+<jsp:include page="../staticElements/topNavBar.jsp"/>
 <div id="layoutSidenav">
-    <jsp:include page="leftNavBar.jsp"/>
+    <jsp:include page="../staticElements/leftNavBar.jsp"/>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -73,42 +41,63 @@
                                     <div class="col-lg-7">
                                         <div class="card shadow-lg border-0 rounded-lg mt-5">
                                             <div class="card-header"><h3
-                                                    class="text-center font-weight-light my-4">Add budget</h3>
+                                                    class="text-center font-weight-light my-4">Add expense</h3>
                                             </div>
                                             <div class="card-body">
                                                 <form:form method="post"
-                                                           modelAttribute="budget">
-                                                    <form:hidden path="id"/>
+                                                           modelAttribute="expense">
                                                 <div class="row mb-3">
                                                     <div class="col-md-6">
-                                                        <div class="form-floating mb-3 mb-md-0">
-                                                            <form:input class="form-control" id="budgetName"
-                                                                        type="text" placeholder="Enter budget name"
+                                                        <div class="form-floating mb-3">
+                                                            <form:input class="form-control" id="expenseName"
+                                                                        type="text" placeholder="Enter name"
                                                                         path="name"/>
-                                                            <label for="budgetName">Budget name</label>
+                                                            <label for="expenseName">Expense name</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-floating">
+                                                    <div class="row mb-3">
+                                                        <div class="col-md-6">
+                                                            <div class="form-floating mb-3">
+                                                                <form:input class="form-control" id="expenseDescription"
+                                                                            type="text" placeholder="Enter description"
+                                                                            path="description"/>
+                                                                <label for="expenseDescription">Description</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-floating mb-3">
                                                             <form:input path="amount" class="form-control"
                                                                         id="budgetAmount"
                                                                         type="number" step="0.01"
-                                                                        placeholder="Planned spendings"></form:input>
+                                                                        placeholder="Amount" ></form:input>
                                                             <form:errors path="amount"
                                                                          cssClass="error" />
-                                                            <label for="budgetAmount">Budget Amount</label>
+                                                            <label for="budgetAmount">Expense Amount</label>
+                                                        </div>
+                                                        <div class="form-floating mb-3">
+                                                            <form:select path="category.id" multiple="false"
+                                                                         itemValue="name" class="form-control"
+                                                                         id="category">
+                                                                <c:forEach var="category" items="${categories}">
+                                                                    <form:option value="${category.id}">
+                                                                        ${category.name}
+                                                                    </form:option>
+                                                                </c:forEach>
+                                                                <label for="category">Category</label>
+                                                            </form:select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="mt-4 mb-0">
-                                                <div class="d-grid"><button class="btn btn-primary btn-block"
-                                                                            type="submit">Save </button>
+                                                <div class="mt-4 mb-0">
+                                                    <div class="d-grid">
+                                                        <button class="btn btn-primary btn-block"
+                                                                type="submit">Save
+                                                        </button>
+                                                    </div>
+                                                    </form:form>
                                                 </div>
                                             </div>
-                                            </form:form>
-                                        </div>
-                                        <div class="card-footer text-center py-3">
+                                            <div class="card-footer text-center py-3">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -121,7 +110,7 @@
     </div>
 
 
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../staticElements/footer.jsp"/>
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -129,4 +118,3 @@
 <script src="js/scripts.js"></script>
 </body>
 </html>
-

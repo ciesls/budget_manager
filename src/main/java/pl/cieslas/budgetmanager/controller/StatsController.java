@@ -68,18 +68,18 @@ public class StatsController {
     // view of categories expenses grouped by month in selected period
     @GetMapping("/categoryStats")
     public String showCategoriesStats() {
-        return "categoriesStats";
+        return "stats/categoriesStats";
     }
 
     @GetMapping("/budgetStatsForm")
     public String budgetStatsForm(){
-        return "budgetStatsForm";
+        return "stats/budgetStatsForm";
     }
 
 
     @GetMapping("/categoriesStatsForm")
     public String categoriesStatsForm(){
-        return "categoriesStatsForm";
+        return "stats/categoriesStatsForm";
     }
 
 
@@ -100,6 +100,6 @@ public class StatsController {
 
     @GetMapping("/budgetStats")
     public String showBudgetStats() {
-        return "budgetStats";
+        return "stats/budgetStats";
     }
 }

@@ -46,14 +46,14 @@ public class BudgetController {
     @GetMapping("/add")
     public String addBudgetForm(Model model) {
         model.addAttribute("budget", new Budget());
-        return "budgetAddForm";
+        return "budget/budgetAddForm";
     }
 
     //  add new budget
     @PostMapping("/add")
     public String addBudget(@Valid Budget budget, BindingResult result, @AuthenticationPrincipal CurrentUser customUser) {
         if (result.hasErrors()){
-            return "budgetAddForm";
+            return "budget/budgetAddForm";
         }
         budget.setUser(customUser.getUser());
         budgetService.saveBudget(budget);
@@ -64,7 +64,7 @@ public class BudgetController {
     @GetMapping("/all")
     public String getUserBudgets(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         model.addAttribute("budgets", budgetService.findAllByUser(currentUser.getUser()));
-        return "userBudgets";
+        return "budget/userBudgets";
 
     }
 
@@ -72,7 +72,7 @@ public class BudgetController {
     @GetMapping("/edit/{id}")
     public String editBudgetForm(Model model, @PathVariable long id) {
         model.addAttribute("budget", budgetService.findById(id));
-        return "budgetEditForm";
+        return "budget/budgetEditForm";
     }
 
     //    edit budget
@@ -101,7 +101,7 @@ public class BudgetController {
 //      get sum of expenses in budget in current month
         model.addAttribute("budgetSum", budgetUtils.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), monthStart, now));
 
-        return "userBudgetsDetails";
+        return "budget/userBudgetsDetails";
     }
 
     //    show categories in budget
@@ -111,7 +111,7 @@ public class BudgetController {
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 
-        return "userCategoriesBudgets";
+        return "categories/userCategoriesBudgets";
     }
 
     //    show all expenses in budget
@@ -120,7 +120,7 @@ public class BudgetController {
         Optional<Budget> budget = budgetService.findById(id);
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("budgetExpenses", budgetUtils.getBudgetExpenses(budgetCategories, currentUser.getUser()));
-        return "userBudgetExpenses";
+        return "budget/userBudgetExpenses";
     }
 
     //    delete budget and set its categories do Other

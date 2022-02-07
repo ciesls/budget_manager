@@ -12,7 +12,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Welcome</title>
 </head>
 <body>
 Application for budget management.

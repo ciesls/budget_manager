@@ -12,7 +12,6 @@ import pl.cieslas.budgetmanager.repository.category.CategoryService;
 import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
 import pl.cieslas.budgetmanager.security.UserService;
-import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
 import pl.cieslas.budgetmanager.utils.CategoryUtils.CategoryUtils;
 import pl.cieslas.budgetmanager.utils.ExpenseUtils.ExpenseUtils;
 
@@ -60,7 +59,7 @@ public class CategoryController {
     @GetMapping("/add")
     public String addCategoryForm(Model model) {
         model.addAttribute("category", new Category());
-        return "categoryAddForm";
+        return "categories/categoryAddForm";
     }
 
     //add new category
@@ -75,7 +74,7 @@ public class CategoryController {
     @GetMapping("/all")
     public String getAllUsersCategories(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         model.addAttribute("categories", categoryService.findAllByUser(currentUser.getUser()));
-        return "userCategories";
+        return "categories/userCategories";
     }
 
     // show expenses in category
@@ -95,14 +94,14 @@ public class CategoryController {
                 (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
                 category.get(), currentUser.getUser(), monthStart, now)));
 
-        return "userExpensesCategory";
+        return "expense/userExpensesCategory";
     }
 
     //    show form for editing category
     @GetMapping("/edit/{id}")
     public String editCategoryForm(Model model, @PathVariable long id) {
         model.addAttribute("category", categoryService.findById(id));
-        return "categoryEditForm";
+        return "categories/categoryEditForm";
     }
 
     //    edit category

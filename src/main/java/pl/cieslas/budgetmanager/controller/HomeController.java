@@ -9,12 +9,12 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home() {
-        return "landingPage";
+        return "staticElements/landingPage";
     }
 
     @GetMapping("/about")
     public String getAbout(){
-        return "landingPage";
+        return "staticElements/landingPage";
     }
 
 

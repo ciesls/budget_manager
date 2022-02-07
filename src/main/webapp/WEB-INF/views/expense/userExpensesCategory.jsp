@@ -25,9 +25,9 @@
             crossorigin="anonymous"></script>
 </head>
 <body class="sb-nav-fixed">
-<jsp:include page="topNavBar.jsp"/>
+<jsp:include page="../staticElements/topNavBar.jsp"/>
 <div id="layoutSidenav">
-    <jsp:include page="leftNavBar.jsp"/>
+    <jsp:include page="../staticElements/leftNavBar.jsp"/>
     <div id="layoutSidenav_content">
         <main>
             <div class="container-fluid px-4">
@@ -49,25 +49,32 @@
                             </tr>
                             </thead>
                             <tbody>
-<c:forEach var="expense" items="${expenses}">
-                            <tr>
-                                <td>${expense.name}</td>
-                                <td>${expense.amount}</td>
-                                <td>${localDateTimeFormat.format(expense.createdOn)}</td>
-                                <td>${expense.description}</td>
-                                <td>${expense.category.name}</td>
-                                <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
-                                <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
-                                <td><a href="/expenses/details/${expense.id}">Details</a></td>
-                            </tr>
-</c:forEach>
+                            <c:forEach var="expense" items="${expensesCategories}">
+                                <tr>
+                                    <td>${expense.name}</td>
+                                    <td>${expense.amount}</td>
+                                    <td>${localDateTimeFormat.format(expense.createdOn)}</td>
+                                    <td>${expense.description}</td>
+                                    <td>${expense.category.name}</td>
+                                    <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
+                                    <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
+                                    <td><a href="/expenses/details/{id}/${expense.id}">Details</a></td>
+                                </tr>
+                            </c:forEach>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </main>
-        <jsp:include page="footer.jsp"/>
+
+        Total expenses
+        ${categorySum}
+        <br>
+        Spent in current month
+        ${monthSum}
+
+        <jsp:include page="../staticElements/footer.jsp"/>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

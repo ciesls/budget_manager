@@ -47,7 +47,7 @@ public class ExpenseController {
     @GetMapping("/all")
     public String getAllUserExpenses(@AuthenticationPrincipal CurrentUser customUser, Model model) {
         model.addAttribute("expenses", expenseService.findAllByUser(customUser.getUser()));
-        return "userExpenses";
+        return "expense/userExpenses";
     }
 
     @GetMapping("/details/{id}")
@@ -56,20 +56,20 @@ public class ExpenseController {
         if (expense.isPresent()) {
             model.addAttribute("expense", expense.get());
         }
-        return "userExpensesDetails";
+        return "expense/userExpensesDetails";
     }
 
     //  show expense form
     @GetMapping("/add")
     public String addExpenseForm(Model model) {
         model.addAttribute("expense", new Expense());
-        return "expenseAddForm";
+        return "expense/expenseAddForm";
     }
 
     @PostMapping("/add")
     public String addExpense(@AuthenticationPrincipal CurrentUser customUser, @Valid Expense expense, BindingResult result) {
         if (result.hasErrors()) {
-            return "expenseAddForm";
+            return "expense/expenseAddForm";
         }
         expense.setUser(customUser.getUser());
         expense.setCreatedOn(LocalDate.now());
@@ -81,7 +81,7 @@ public class ExpenseController {
     @GetMapping("/edit/{id}")
     public String editExpenseForm(Model model, @PathVariable long id) {
         model.addAttribute("expense", expenseService.findById(id));
-        return "expenseEditForm";
+        return "expense/expenseEditForm";
     }
 
     //    edit expense

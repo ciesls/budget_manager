@@ -26,7 +26,7 @@ public class UserUtils {
         budget.setName("Other");
         category.setUser(user);
         category.setName("Other");
-        budget.setAmount(BigDecimal.valueOf(0L));
+        budget.setAmount(BigDecimal.valueOf(0.00));
         budgetService.saveBudget(budget);
         category.setBudget(budget);
         categoryService.saveCategory(category);
