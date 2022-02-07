@@ -73,6 +73,18 @@ public class BudgetUtils {
 
     }
 
+    public List<Expense> getBudgetExpensesDates(List<Category> categories, User user, LocalDate startTime, LocalDate endTime) {
+
+        List<Expense> allBudgetExpenses = new ArrayList<>();
+
+        for (int i = 0; i < categories.size(); i++) {
+            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(categories.get(i), user, startTime, endTime));
+        }
+        return allBudgetExpenses;
+
+    }
+
+
 //    public void checkIfBudgetOtherExists(User user) {
 //
 //        Budget budgetOther = budgetService.findByNameAndUser("Other", user);

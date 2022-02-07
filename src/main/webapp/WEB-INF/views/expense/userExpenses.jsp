@@ -45,7 +45,6 @@
                                 <th>Category</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
-                                <th>Details</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -58,7 +57,6 @@
                                 <td>${expense.category.name}</td>
                                 <td><a href="/expenses/edit/${expense.id}">Edit</a></td>
                                 <td><a href="/expenses/delete/${expense.id}">Delete</a></td>
-                                <td><a href="/expenses/details/${expense.id}">Details</a></td>
                             </tr>
 </c:forEach>
                             </tbody>

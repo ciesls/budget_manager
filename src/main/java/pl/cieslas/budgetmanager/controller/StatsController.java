@@ -91,7 +91,7 @@ public class StatsController {
 
         Optional<Budget> budget = budgetService.findById(budgetID);
         List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        List<Expense> expensesBudget = budgetUtils.getBudgetExpenses(categoriesBudget, currentUser.getUser());
+        List<Expense> expensesBudget = budgetUtils.getBudgetExpensesDates(categoriesBudget, currentUser.getUser(), startDate, endDate);
         redirectAttributes.addFlashAttribute("expensesGrouped", expenseUtils.groupExpensesByMonth(expensesBudget));
         redirectAttributes.addFlashAttribute("budget", budget.get());
         return "redirect:/stats/budgetStats";

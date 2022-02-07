@@ -28,17 +28,17 @@
 </head>
 <body>
 
-<c:forEach var="entry" items="${groupedByCategory}">
-    <table style="width:100%">
+    <table>
         <thead>
         <tr>
             <th></th>
-            <th>${entry.key}</th>
+            <th>${category.name}</th>
         </tr>
         </thead>
         <tbody>
+<c:forEach var="entry" items="${groupedByCategory}">
         <tr>
-            <td>${category.name}</td>
+            <td>${entry.key}</td>
             <td>${entry.value}</td>
         </tr>
         </tbody>

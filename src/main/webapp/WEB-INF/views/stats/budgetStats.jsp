@@ -12,33 +12,21 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 5px;
-            text-align: left;
-        }
-    </style>
 </head>
 <title>Expense List</title>
 </head>
 <body>
 
-<c:forEach var="entry" items="${expensesGrouped}">
-    <table style="width:100%">
+    <table>
         <thead>
         <tr>
-            <th></th>
-            <th>${entry.key}</th>
+            <th>${budget.name}</th>
         </tr>
         </thead>
         <tbody>
+<c:forEach var="entry" items="${expensesGrouped}">
         <tr>
-            <td>${budget.name}</td>
+            <td>${entry.key}</td>
             <td>${entry.value}</td>
         </tr>
         </tbody>
