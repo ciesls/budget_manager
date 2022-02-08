@@ -29,9 +29,9 @@
             <td>${entry.key}</td>
             <td>${entry.value}</td>
         </tr>
+</c:forEach>
         </tbody>
     </table>
-</c:forEach>
 
 
 </body>

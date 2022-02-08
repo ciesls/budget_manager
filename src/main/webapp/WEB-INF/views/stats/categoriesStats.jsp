@@ -12,17 +12,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
-    <style>
-        table, th, td {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 5px;
-            text-align: left;
-        }
-    </style>
 </head>
 <title>Expense List</title>
 </head>
@@ -31,7 +20,6 @@
     <table>
         <thead>
         <tr>
-            <th></th>
             <th>${category.name}</th>
         </tr>
         </thead>
@@ -41,9 +29,9 @@
             <td>${entry.key}</td>
             <td>${entry.value}</td>
         </tr>
+</c:forEach>
         </tbody>
     </table>
-</c:forEach>
 
 
 </body>

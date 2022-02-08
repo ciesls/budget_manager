@@ -108,20 +108,22 @@ public class ExpenseController {
         expense.setUser(customUser.getUser());
         expenseService.saveExpense(expense);
 
-        Long accountId = expense.getAccount().getId();
-        Optional<Account> account = accountService.findById(accountId);
-        if (account.isPresent()){
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.add(expense.getAmount()));
-            accountService.save(account.get());
-        }
-
         return "redirect:/expenses/all";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser customUser) {
+        Optional<Expense> expense = expenseService.findById(id);
         expenseService.deleteByIdAndUser(id, customUser.getUser());
+
+        Long accountId = expense.get().getAccount().getId();
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isPresent()){
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(expense.get().getAmount()));
+            accountService.save(account.get());
+        }
+
         return "redirect:/expenses/all";
     }
 

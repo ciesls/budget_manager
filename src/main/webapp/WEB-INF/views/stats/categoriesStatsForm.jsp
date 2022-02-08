@@ -66,14 +66,14 @@
                                                         <div class="row mb-3">
                                                             <div class="col-md-6">
                                                                 <div class="form-floating mb-3">
-                                                                    <select name="budget" multiple="false"
-                                                                            class="form-control" id="budget">
+                                                                    <select name="category" multiple="false"
+                                                                            class="form-control" id="category">
                                                                         <c:forEach var="category" items="${categories}">
                                                                             <option value="${category.id}">
                                                                                     ${category.name}
                                                                             </option>
                                                                         </c:forEach>
-                                                                        <label for="budget">Budget</label>
+                                                                        <label for="category">Category</label>
                                                                     </select>
                                                                 </div>
                                                             </div>

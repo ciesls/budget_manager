@@ -49,7 +49,12 @@ public class StatsController {
         return categoryService.findAllByUser(customUser.getUser());
     }
 
-    @PostMapping("/categoryStats")
+    @GetMapping("/categoriesStatsForm")
+    public String categoriesStatsForm(){
+        return "stats/categoriesStatsForm";
+    }
+
+    @PostMapping("/categoriesStats")
     public String categoryStats(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
                                 @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
                                 @AuthenticationPrincipal CurrentUser currentUser,
@@ -62,11 +67,11 @@ public class StatsController {
         redirectAttributes.addFlashAttribute("category", category.get());
         redirectAttributes.addFlashAttribute("groupedByCategory", expenseUtils.groupExpensesByMonth(expenses));
 
-        return "redirect:/stats/categoryStats";
+        return "redirect:/stats/categoriesStats";
     }
 
     // view of categories expenses grouped by month in selected period
-    @GetMapping("/categoryStats")
+    @GetMapping("/categoriesStats")
     public String showCategoriesStats() {
         return "stats/categoriesStats";
     }
@@ -75,13 +80,6 @@ public class StatsController {
     public String budgetStatsForm(){
         return "stats/budgetStatsForm";
     }
-
-
-    @GetMapping("/categoriesStatsForm")
-    public String categoriesStatsForm(){
-        return "stats/categoriesStatsForm";
-    }
-
 
     @PostMapping("/budgetStats")
     public String budgetStats(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,

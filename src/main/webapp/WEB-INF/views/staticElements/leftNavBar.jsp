@@ -74,7 +74,7 @@
                 </div>
                 <a class="nav-link" href="/stats/categoriesStatsForm">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Categories budgets stats
+                    Categories stats
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">

@@ -32,7 +32,7 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Amount</th>
+                                <th>Planned amount</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                                 <th>Details</th>

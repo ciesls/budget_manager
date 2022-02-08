@@ -21,13 +21,13 @@
     <form:input path="name" type="text"/><br>
     <label>Amount:</label>
     <form:input path="amount" type="number" step="0.01"/>
-    <input type="submit" value="Save">
     <form:select path="account.id" multiple="false" itemValue="name">
         <c:forEach var="account" items="${accounts}">
             <form:option value="${account.id}">
                 ${account.name}
             </form:option>
         </c:forEach>
+        <input type="submit" value="Save">
     </form:select>
 </form:form>
 </body>
