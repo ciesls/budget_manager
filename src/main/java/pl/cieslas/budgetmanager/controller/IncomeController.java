@@ -10,6 +10,7 @@ import pl.cieslas.budgetmanager.repository.account.AccountService;
 import pl.cieslas.budgetmanager.repository.income.IncomeService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +43,19 @@ public class IncomeController {
     public String addIncome(@AuthenticationPrincipal CurrentUser currentUser, Income income) {
         income.setUser(currentUser.getUser());
         income.setCreatedOn(LocalDate.now());
-        System.out.println(income.getAmount());
-        System.out.println(income.getAccount().getBalance());
         incomeService.save(income);
-//        account.increaseBalance(income.getAmount());
-//        accountService.save(account);
+        Long accountId = income.getAccount().getId();
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isPresent()){
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(income.getAmount()));
+            accountService.save(account.get());
+        }
+
         return "redirect:/dashboard";
     }
+
+
+
 
 }

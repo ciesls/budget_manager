@@ -5,9 +5,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import pl.cieslas.budgetmanager.entity.Account;
 import pl.cieslas.budgetmanager.entity.Budget;
 import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.Expense;
+import pl.cieslas.budgetmanager.repository.account.AccountService;
 import pl.cieslas.budgetmanager.repository.budget.BudgetService;
 import pl.cieslas.budgetmanager.repository.category.CategoryService;
 import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
@@ -21,7 +23,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -32,13 +33,15 @@ public class DashboardController {
     private final BudgetService budgetService;
     private final BudgetUtils budgetUtils;
     private final CategoryUtils categoryUtils;
+    private final AccountService accountService;
 
-    public DashboardController(ExpenseService expenseService, CategoryService categoryService, BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils) {
+    public DashboardController(ExpenseService expenseService, CategoryService categoryService, BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils, AccountService accountService) {
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.budgetUtils = budgetUtils;
         this.categoryUtils = categoryUtils;
+        this.accountService = accountService;
     }
 
 
@@ -96,7 +99,10 @@ public class DashboardController {
         return categoryUtils.getCategorySum(currentUser.getUser(), categories, startTime, now);
     }
 
-
+    @ModelAttribute("accounts")
+    public List<Account> accounts(@AuthenticationPrincipal CurrentUser currentUser) {
+        return accountService.findAllByUser(currentUser.getUser());
+    }
 
 
     @GetMapping

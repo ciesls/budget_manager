@@ -90,6 +90,15 @@
                     <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                     </nav>
                 </div>
+                <a class="nav-link" href="/income/add">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Add Income
+                </a>
+                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                     data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                    </nav>
+                </div>
             </div>
         </div>
     </nav>

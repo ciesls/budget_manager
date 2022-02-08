@@ -109,6 +109,27 @@
                         </c:forEach>
                         </tbody>
                     </table>
+<br>
+
+                    <table id="datatablesSimple">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Balance</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="account" items="${accounts}">
+                            <tr>
+                                <td>${account.name}</td>
+                                <td>${account.balance}</td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
 
         </main>
         <jsp:include page="staticElements/footer.jsp"/>
