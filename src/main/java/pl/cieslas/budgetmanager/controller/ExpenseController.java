@@ -5,14 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.cieslas.budgetmanager.entity.Account;
 import pl.cieslas.budgetmanager.entity.Category;
 import pl.cieslas.budgetmanager.entity.Expense;
+import pl.cieslas.budgetmanager.repository.account.AccountService;
 import pl.cieslas.budgetmanager.repository.category.CategoryService;
 import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
 import pl.cieslas.budgetmanager.security.UserService;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -25,11 +28,13 @@ public class ExpenseController {
     private final ExpenseService expenseService;
     private final UserService userService;
     private final CategoryService categoryService;
+    private final AccountService accountService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, AccountService accountService) {
         this.expenseService = expenseService;
         this.userService = userService;
         this.categoryService = categoryService;
+        this.accountService = accountService;
     }
 
     @ModelAttribute("categories")
@@ -43,6 +48,10 @@ public class ExpenseController {
         return localDateTimeFormat;
     }
 
+    @ModelAttribute("accounts")
+    public List<Account> accounts(@AuthenticationPrincipal CurrentUser currentUser) {
+        return accountService.findAllByUser(currentUser.getUser());
+    }
 
     @GetMapping("/all")
     public String getAllUserExpenses(@AuthenticationPrincipal CurrentUser customUser, Model model) {
@@ -74,6 +83,15 @@ public class ExpenseController {
         expense.setUser(customUser.getUser());
         expense.setCreatedOn(LocalDate.now());
         expenseService.saveExpense(expense);
+
+        Long accountId = expense.getAccount().getId();
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isPresent()){
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.subtract(expense.getAmount()));
+            accountService.save(account.get());
+        }
+
         return "redirect:/expenses/all";
     }
 
@@ -89,6 +107,15 @@ public class ExpenseController {
     public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser customUser) {
         expense.setUser(customUser.getUser());
         expenseService.saveExpense(expense);
+
+        Long accountId = expense.getAccount().getId();
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isPresent()){
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(expense.getAmount()));
+            accountService.save(account.get());
+        }
+
         return "redirect:/expenses/all";
     }
 

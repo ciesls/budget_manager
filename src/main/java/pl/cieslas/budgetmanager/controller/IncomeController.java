@@ -28,6 +28,11 @@ public class IncomeController {
         return accountService.findAllByUser(currentUser.getUser());
     }
 
+    @ModelAttribute("incomes")
+    public List<Income> incomes(@AuthenticationPrincipal CurrentUser currentUser) {
+        return incomeService.findAllByUser(currentUser.getUser());
+    }
+
     public IncomeController(IncomeService incomeService, AccountService accountService) {
         this.incomeService = incomeService;
         this.accountService = accountService;
@@ -36,7 +41,7 @@ public class IncomeController {
     @GetMapping("/add")
     public String addIncomeForm(Model model) {
         model.addAttribute("income", new Income());
-        return "incomeAddForm";
+        return "income/incomeAddForm";
     }
 
     @PostMapping("add")
@@ -55,6 +60,25 @@ public class IncomeController {
         return "redirect:/dashboard";
     }
 
+    @GetMapping("/all")
+    public String getAllUserIncomes() {
+        return "income/userIncomes";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteIncome(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
+        Optional<Income> income = incomeService.findByIdAndUser(id, currentUser.getUser());
+        Long accountId = income.get().getAccount().getId();
+        Optional<Account> account = accountService.findById(accountId);
+        if (account.isPresent()){
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
+            accountService.save(account.get());
+        }
+        incomeService.deleteByIdAndUser(id, currentUser.getUser());
+
+        return "redirect:/income/all";
+    }
 
 
 

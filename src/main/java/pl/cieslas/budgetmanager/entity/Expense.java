@@ -112,5 +112,11 @@ public class Expense {
         return YearMonth.from(createdOn);
     }
 
+    public Account getAccount() {
+        return account;
+    }
 
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 }
