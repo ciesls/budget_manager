@@ -71,7 +71,7 @@
                             </div>
                         </div>
                     </div>
-<br>
+                    <br>
                     <table>
                         <thead>
                         <tr>
@@ -82,12 +82,12 @@
                         </thead>
                         <tbody>
                         <tr>
-                    <c:forEach var="entry" items="${budgetAmount}">
+                            <c:forEach var="entry" items="${budgetAmount}">
                             <td>${entry.key.name}</td>
                             <td>${entry.value}</td>
                             <td>${entry.key.amount}</td>
                         </tr>
-                    </c:forEach>
+                        </c:forEach>
                         </tbody>
                     </table>
 
@@ -109,7 +109,7 @@
                         </c:forEach>
                         </tbody>
                     </table>
-<br>
+                    <br>
                     Accounts
                     <table id="datatablesSimple">
                         <thead>
@@ -129,15 +129,32 @@
                     </table>
                 </div>
             </div>
-    </div>
 
-        </main>
-        <jsp:include page="staticElements/footer.jsp"/>
+            <br>
+            Sum of accounts
+            <table id="datatablesSimple">
+                <thead>
+                <tr>
+                    <th>Total Balance</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${balanceSum}</td>
+                </tr>
+                </tbody>
+            </table>
     </div>
+</div>
+</div>
+</div>
+</main>
+<jsp:include page="staticElements/footer.jsp"/>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-            crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="js/scripts.js"></script>
 
 </div>
 </body>

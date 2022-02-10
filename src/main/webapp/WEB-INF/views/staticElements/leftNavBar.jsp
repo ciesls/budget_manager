@@ -38,7 +38,7 @@
                 </div>
                 <a class="nav-link" href="/expenses/add">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Add new expense
+                    Add expense
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">
@@ -47,7 +47,7 @@
                 </div>
                 <a class="nav-link" href="/categories/add">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Add new category
+                    Add category
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">
@@ -56,7 +56,7 @@
                 </div>
                 <a class="nav-link" href="/budgets/add">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Add new budget
+                    Add budget
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">
@@ -111,6 +111,15 @@
                 <a class="nav-link" href="/income/all">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                     All incomes
+                </a>
+                <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                     data-bs-parent="#sidenavAccordion">
+                    <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                    </nav>
+                </div>
+                <a class="nav-link" href="/account/transfer">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    Make transfer
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">

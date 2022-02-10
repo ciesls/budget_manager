@@ -14,6 +14,7 @@ import pl.cieslas.budgetmanager.repository.budget.BudgetService;
 import pl.cieslas.budgetmanager.repository.category.CategoryService;
 import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
+import pl.cieslas.budgetmanager.utils.AccountUtils.AccountUtils;
 import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
 import pl.cieslas.budgetmanager.utils.CategoryUtils.CategoryUtils;
 
@@ -34,14 +35,16 @@ public class DashboardController {
     private final BudgetUtils budgetUtils;
     private final CategoryUtils categoryUtils;
     private final AccountService accountService;
+    private final AccountUtils accountUtils;
 
-    public DashboardController(ExpenseService expenseService, CategoryService categoryService, BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils, AccountService accountService) {
+    public DashboardController(ExpenseService expenseService, CategoryService categoryService, BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils, AccountService accountService, AccountUtils accountUtils) {
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.budgetUtils = budgetUtils;
         this.categoryUtils = categoryUtils;
         this.accountService = accountService;
+        this.accountUtils = accountUtils;
     }
 
 
@@ -74,7 +77,7 @@ public class DashboardController {
         return budgetService.findAllByUser(currentUser.getUser());
     }
 
-//    add budgets with amounts in a month
+    //    add budgets with amounts in a month
     @ModelAttribute("budgetAmount")
     public Map<Budget, BigDecimal> getBudgetSum(@AuthenticationPrincipal CurrentUser currentUser) {
         LocalDate startTime = LocalDate.now().withDayOfMonth(1);
@@ -90,7 +93,7 @@ public class DashboardController {
         return budgetAmount;
     }
 
-//    add categories with sums
+    //    add categories with sums
     @ModelAttribute("categoriesSum")
     public Map<Category, BigDecimal> getCategoriesSums(@AuthenticationPrincipal CurrentUser currentUser) {
         List<Category> categories = categoryService.findAllByUser(currentUser.getUser());
@@ -105,12 +108,18 @@ public class DashboardController {
     }
 
 
-    @GetMapping
-    public String showDashboard(){
-        return "dashboard";
+    @ModelAttribute("balanceSum")
+    public BigDecimal balanceSum(@AuthenticationPrincipal CurrentUser currentUser) {
+        List<Account> accounts = accountService.findAllByUser(currentUser.getUser());
+        System.out.println(accountUtils.sumOfAccounts(accounts));
+        return accountUtils.sumOfAccounts(accounts);
+
     }
 
-
+    @GetMapping
+    public String showDashboard() {
+        return "dashboard";
+    }
 
 
 }
