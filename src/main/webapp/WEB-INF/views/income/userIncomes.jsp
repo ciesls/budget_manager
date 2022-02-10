@@ -34,8 +34,8 @@
                                 <th>Name</th>
                                 <th>Amount</th>
                                 <th>Date</th>
+                                <th>Edit</th>
                                 <th>Delete</th>
-<%--                                <th>Delete</th>--%>
                             </tr>
                             </thead>
                             <tbody>
@@ -44,9 +44,8 @@
                                     <td>${income.name}</td>
                                     <td>${income.amount}</td>
                                     <td>${income.createdOn}</td>
+                                    <td><a href="/income/edit/${income.id}">Edit</a></td>
                                     <td><a href="/income/delete/${income.id}">Delete</a></td>
-<%--                                    <td><a href="/budgets/delete/${budget.id}">Delete</a></td>--%>
-<%--                                    <td><a href="/budgets/details/${budget.id}">Details</a></td>--%>
                                 </tr>
                             </c:forEach>
                             </tbody>

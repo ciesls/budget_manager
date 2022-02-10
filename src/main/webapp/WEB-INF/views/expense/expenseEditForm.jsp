@@ -79,6 +79,18 @@
                                                                 <label for="category">Category</label>
                                                             </form:select>
                                                         </div>
+                                                        <div class="form-floating mb-3">
+                                                            <form:select path="account.id" multiple="false"
+                                                                         itemValue="name" class="form-control"
+                                                                         id="account">
+                                                                <c:forEach var="account" items="${accounts}">
+                                                                    <form:option value="${account.id}">
+                                                                        ${account.name}
+                                                                    </form:option>
+                                                                </c:forEach>
+                                                                <label for="account">Account</label>
+                                                            </form:select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="mt-4 mb-0">

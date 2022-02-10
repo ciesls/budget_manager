@@ -3,10 +3,7 @@ package pl.cieslas.budgetmanager.controller;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.entity.Account;
 import pl.cieslas.budgetmanager.repository.account.AccountService;
 import pl.cieslas.budgetmanager.security.CurrentUser;
@@ -50,5 +47,19 @@ public class AccountController {
     public String getAlluserAccounts() {
         return "account/userAccounts";
     }
+
+    @GetMapping("/edit/{id}")
+    public String accountEditForm(Model model, @PathVariable long id) {
+        model.addAttribute("account", accountService.findById(id));
+        return "account/accountEditForm";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editAccount(Account account, @AuthenticationPrincipal CurrentUser currentUser) {
+        account.setUser(currentUser.getUser());
+        accountService.save(account);
+        return "redirect:/account/all";
+    }
+
 
 }

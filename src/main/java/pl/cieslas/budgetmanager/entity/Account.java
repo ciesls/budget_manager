@@ -14,6 +14,7 @@ public class Account {
     private Long id;
     private String name;
     private BigDecimal balance;
+    @Column(name = "created_on", updatable = false)
     @CreationTimestamp
     private LocalDate createdOn;
 

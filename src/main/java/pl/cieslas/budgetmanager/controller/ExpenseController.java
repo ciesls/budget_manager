@@ -86,7 +86,7 @@ public class ExpenseController {
 
         Long accountId = expense.getAccount().getId();
         Optional<Account> account = accountService.findById(accountId);
-        if (account.isPresent()){
+        if (account.isPresent()) {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.subtract(expense.getAmount()));
             accountService.save(account.get());
@@ -104,9 +104,47 @@ public class ExpenseController {
 
     //    edit expense
     @PostMapping("/edit/{id}")
-    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser customUser) {
+    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser customUser, @PathVariable long id) {
+//        org expense details
+        Optional<Expense> orgExpense = expenseService.findById(id);
+        Account orgAccount = orgExpense.get().getAccount();
+        BigDecimal orgAmount = orgExpense.get().getAmount();
+        BigDecimal orgAccBalance = orgAccount.getBalance();
+        System.out.println(orgAccount.getName());
+        System.out.println(orgAmount);
+
         expense.setUser(customUser.getUser());
         expenseService.saveExpense(expense);
+
+        //        updated expense details
+        Optional<Expense> updatedExpense = expenseService.findById(id);
+        BigDecimal updatedAmount = updatedExpense.get().getAmount();
+        Account updatedAccount = updatedExpense.get().getAccount();
+        BigDecimal updatedAccBalance = updatedAccount.getBalance();
+        System.out.println(updatedAmount);
+        System.out.println(updatedAccount.getName());
+
+        int result = orgAmount.compareTo(updatedAmount);
+
+        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
+            BigDecimal delta = updatedAmount.subtract(orgAmount);
+            orgAccount.setBalance(orgAccBalance.subtract(delta));
+            accountService.save(orgAccount);
+
+        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
+            BigDecimal delta = orgAmount.subtract(updatedAmount);
+            orgAccount.setBalance(orgAccBalance.add(delta));
+            accountService.save(orgAccount);
+
+        } else if (orgAccount != updatedAccount) { //account change && if updated > org;
+            // subtract from orgAccount full amount, add to new account full amount
+            updatedAccount.setBalance(updatedAccBalance.subtract(updatedAmount));
+            accountService.save(updatedAccount);
+            orgAccount.setBalance(orgAccBalance.add(orgAmount));
+            accountService.save(orgAccount);
+
+        }
+
 
         return "redirect:/expenses/all";
     }
@@ -118,7 +156,7 @@ public class ExpenseController {
 
         Long accountId = expense.get().getAccount().getId();
         Optional<Account> account = accountService.findById(accountId);
-        if (account.isPresent()){
+        if (account.isPresent()) {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.add(expense.get().getAmount()));
             accountService.save(account.get());

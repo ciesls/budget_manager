@@ -33,7 +33,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Balance</th>
-<%--                                <th>Edit</th>--%>
+                                <th>Edit</th>
 <%--                                <th>Delete</th>--%>
                             </tr>
                             </thead>
@@ -42,7 +42,7 @@
                                 <tr>
                                     <td>${account.name}</td>
                                     <td>${account.balance}</td>
-<%--                                    <td>${account.balance}</td>--%>
+                                    <td><a href="/account/edit/${account.id}">Edit</a></td>
 <%--                                    <td>${account.balance}</td>--%>
                                 </tr>
                             </c:forEach>

@@ -40,8 +40,6 @@ public class ExpenseUtils {
                         Collectors.groupingBy(Expense::getYearMonth,
                                 Collectors.mapping(
                                         Expense::getAmount, Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
-        System.out.println(groupedSum);
-
         return groupedSum;
 
     }
