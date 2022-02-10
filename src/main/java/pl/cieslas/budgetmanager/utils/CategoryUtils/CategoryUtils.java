@@ -8,7 +8,6 @@ import pl.cieslas.budgetmanager.entity.User;
 import pl.cieslas.budgetmanager.repository.budget.BudgetService;
 import pl.cieslas.budgetmanager.repository.category.CategoryService;
 import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
-import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
 import pl.cieslas.budgetmanager.utils.ExpenseUtils.ExpenseUtils;
 
 import java.math.BigDecimal;

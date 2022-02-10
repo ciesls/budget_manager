@@ -34,7 +34,7 @@
                modelAttribute="account">
     <label>Name:</label>
         <form:input path="name" type="text"/><br>
-    <label>Amount:</label>
+    <label>Starting balance:</label>
         <form:input path="balance" type="number" step="0.01"/>
     <input type="submit" value="Save">
     </form:form>

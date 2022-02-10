@@ -3,7 +3,6 @@ package pl.cieslas.budgetmanager.repository.account;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import pl.cieslas.budgetmanager.entity.Account;
-import pl.cieslas.budgetmanager.entity.Income;
 import pl.cieslas.budgetmanager.entity.User;
 
 import java.util.List;

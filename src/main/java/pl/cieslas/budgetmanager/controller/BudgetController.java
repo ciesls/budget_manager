@@ -51,11 +51,11 @@ public class BudgetController {
 
     //  add new budget
     @PostMapping("/add")
-    public String addBudget(@Valid Budget budget, BindingResult result, @AuthenticationPrincipal CurrentUser customUser) {
+    public String addBudget(@Valid Budget budget, BindingResult result, @AuthenticationPrincipal CurrentUser currentUser) {
         if (result.hasErrors()){
             return "budget/budgetAddForm";
         }
-        budget.setUser(customUser.getUser());
+        budget.setUser(currentUser.getUser());
         budgetService.saveBudget(budget);
         return "redirect:/budgets/all";
     }
@@ -84,9 +84,9 @@ public class BudgetController {
     }
 
     @GetMapping("/delete")
-    public String deleteBudget(@AuthenticationPrincipal CurrentUser customUser) {
+    public String deleteBudget(@AuthenticationPrincipal CurrentUser currentUser) {
         budgetService.deleteById(2L);
-        return budgetService.findAllByUser(customUser.getUser()).toString();
+        return budgetService.findAllByUser(currentUser.getUser()).toString();
     }
 
     @GetMapping("/details/{id}")

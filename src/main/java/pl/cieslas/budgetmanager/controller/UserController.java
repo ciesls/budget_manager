@@ -41,8 +41,8 @@ public class UserController {
 
     @GetMapping("/admin")
     @ResponseBody
-    public String admin(@AuthenticationPrincipal CurrentUser customUser) {
-        User entityUser = customUser.getUser();
+    public String admin(@AuthenticationPrincipal CurrentUser currentUser) {
+        User entityUser = currentUser.getUser();
         return "Hello " + entityUser.getUsername();
     }
 

@@ -40,13 +40,13 @@ public class StatsController {
     }
 
     @ModelAttribute("budgets")
-    public List<Budget> budgets(@AuthenticationPrincipal CurrentUser customUser) {
-        return budgetService.findAllByUser(customUser.getUser());
+    public List<Budget> budgets(@AuthenticationPrincipal CurrentUser currentUser) {
+        return budgetService.findAllByUser(currentUser.getUser());
     }
 
     @ModelAttribute("categories")
-    public List<Category> categories(@AuthenticationPrincipal CurrentUser customUser) {
-        return categoryService.findAllByUser(customUser.getUser());
+    public List<Category> categories(@AuthenticationPrincipal CurrentUser currentUser) {
+        return categoryService.findAllByUser(currentUser.getUser());
     }
 
     @GetMapping("/categoriesStatsForm")

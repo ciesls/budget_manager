@@ -38,8 +38,8 @@ public class ExpenseController {
     }
 
     @ModelAttribute("categories")
-    public List<Category> categories(@AuthenticationPrincipal CurrentUser customUser) {
-        return categoryService.findAllByUser(customUser.getUser());
+    public List<Category> categories(@AuthenticationPrincipal CurrentUser currentUser) {
+        return categoryService.findAllByUser(currentUser.getUser());
     }
 
     @ModelAttribute("localDateTimeFormat")
@@ -54,14 +54,14 @@ public class ExpenseController {
     }
 
     @GetMapping("/all")
-    public String getAllUserExpenses(@AuthenticationPrincipal CurrentUser customUser, Model model) {
-        model.addAttribute("expenses", expenseService.findAllByUser(customUser.getUser()));
+    public String getAllUserExpenses(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        model.addAttribute("expenses", expenseService.findAllByUser(currentUser.getUser()));
         return "expense/userExpenses";
     }
 
     @GetMapping("/details/{id}")
-    public String getExpense(@AuthenticationPrincipal CurrentUser customUser, @PathVariable long id, Model model) {
-        Optional<Expense> expense = expenseService.getPerUser(id, customUser.getUser());
+    public String getExpense(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id, Model model) {
+        Optional<Expense> expense = expenseService.getPerUser(id, currentUser.getUser());
         if (expense.isPresent()) {
             model.addAttribute("expense", expense.get());
         }
@@ -76,11 +76,11 @@ public class ExpenseController {
     }
 
     @PostMapping("/add")
-    public String addExpense(@AuthenticationPrincipal CurrentUser customUser, @Valid Expense expense, BindingResult result) {
+    public String addExpense(@AuthenticationPrincipal CurrentUser currentUser, @Valid Expense expense, BindingResult result) {
         if (result.hasErrors()) {
             return "expense/expenseAddForm";
         }
-        expense.setUser(customUser.getUser());
+        expense.setUser(currentUser.getUser());
         expense.setCreatedOn(LocalDate.now());
         expenseService.saveExpense(expense);
 
@@ -104,7 +104,7 @@ public class ExpenseController {
 
     //    edit expense
     @PostMapping("/edit/{id}")
-    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser customUser, @PathVariable long id) {
+    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
 //        org expense details
         Optional<Expense> orgExpense = expenseService.findById(id);
         Account orgAccount = orgExpense.get().getAccount();
@@ -113,7 +113,7 @@ public class ExpenseController {
         System.out.println(orgAccount.getName());
         System.out.println(orgAmount);
 
-        expense.setUser(customUser.getUser());
+        expense.setUser(currentUser.getUser());
         expenseService.saveExpense(expense);
 
         //        updated expense details
@@ -150,9 +150,9 @@ public class ExpenseController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser customUser) {
+    public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
         Optional<Expense> expense = expenseService.findById(id);
-        expenseService.deleteByIdAndUser(id, customUser.getUser());
+        expenseService.deleteByIdAndUser(id, currentUser.getUser());
 
         Long accountId = expense.get().getAccount().getId();
         Optional<Account> account = accountService.findById(accountId);
