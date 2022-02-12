@@ -65,7 +65,7 @@
                 </div>
                 <a class="nav-link" href="/stats/budgetStatsForm">
                     <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    Show budgets stats
+                    Budgets stats
                 </a>
                 <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
                      data-bs-parent="#sidenavAccordion">

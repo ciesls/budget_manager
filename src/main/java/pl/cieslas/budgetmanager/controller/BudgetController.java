@@ -51,7 +51,8 @@ public class BudgetController {
 
     //  add new budget
     @PostMapping("/add")
-    public String addBudget(@Valid Budget budget, BindingResult result, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String addBudget(@Valid Budget budget, BindingResult result,
+                            @AuthenticationPrincipal CurrentUser currentUser) {
         if (result.hasErrors()){
             return "budget/budgetAddForm";
         }
@@ -90,7 +91,8 @@ public class BudgetController {
     }
 
     @GetMapping("/details/{id}")
-    public String getBudgeDetails(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
+    public String getBudgeDetails(@PathVariable long id,
+                                  @AuthenticationPrincipal CurrentUser currentUser, Model model) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(currentUser.getUser(), id);
@@ -99,14 +101,16 @@ public class BudgetController {
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 //      get sum of expenses in budget in current month
-        model.addAttribute("budgetSum", budgetUtils.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), monthStart, now));
+        model.addAttribute("budgetSum",
+                budgetUtils.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), monthStart, now));
 
         return "budget/userBudgetsDetails";
     }
 
     //    show categories in budget
     @GetMapping("/budgetCategories/{id}")
-    public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id, Model model) {
+    public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser currentUser,
+                                             @PathVariable long id, Model model) {
         Optional<Budget> budget = budgetService.findById(id);
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
@@ -116,10 +120,12 @@ public class BudgetController {
 
     //    show all expenses in budget
     @GetMapping("/budgetExpenses/{id}")
-    public String getAllExpensesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, Model model, @PathVariable long id) {
+    public String getAllExpensesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, Model model,
+                                           @PathVariable long id) {
         Optional<Budget> budget = budgetService.findById(id);
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        model.addAttribute("budgetExpenses", budgetUtils.getBudgetExpenses(budgetCategories, currentUser.getUser()));
+        model.addAttribute("budgetExpenses",
+                budgetUtils.getBudgetExpenses(budgetCategories, currentUser.getUser()));
         return "budget/userBudgetExpenses";
     }
 

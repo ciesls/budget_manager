@@ -37,7 +37,9 @@ public class DashboardController {
     private final AccountService accountService;
     private final AccountUtils accountUtils;
 
-    public DashboardController(ExpenseService expenseService, CategoryService categoryService, BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils, AccountService accountService, AccountUtils accountUtils) {
+    public DashboardController(ExpenseService expenseService, CategoryService categoryService,
+                               BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils,
+                               AccountService accountService, AccountUtils accountUtils) {
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
@@ -46,7 +48,6 @@ public class DashboardController {
         this.accountService = accountService;
         this.accountUtils = accountUtils;
     }
-
 
     @ModelAttribute("localDateTimeFormat")
     public DateTimeFormatter formatDate() {
@@ -60,7 +61,8 @@ public class DashboardController {
     }
 
     @ModelAttribute("currentMonthExpenses")
-    public List<Expense> currentMonthExpenses(LocalDate startTime, LocalDate now, @AuthenticationPrincipal CurrentUser currentUser) {
+    public List<Expense> currentMonthExpenses(LocalDate startTime, LocalDate now,
+                                              @AuthenticationPrincipal CurrentUser currentUser) {
         startTime = LocalDate.now().withDayOfMonth(1);
         now = LocalDate.now();
         return expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
@@ -85,8 +87,10 @@ public class DashboardController {
         List<Budget> budgets = budgetService.findAllByUser(currentUser.getUser());
         Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
         for (int i = 0; i < budgets.size(); i++) {
-            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), (budgets.get(i)));
-            BigDecimal budgetSum = budgetUtils.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), startTime, now);
+            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(),
+                    (budgets.get(i)));
+            BigDecimal budgetSum = budgetUtils.calculateExpensesInBudgetDates(budgetCategories,
+                    currentUser.getUser(), startTime, now);
             budgetAmount.put(budgets.get(i), budgetSum);
         }
 

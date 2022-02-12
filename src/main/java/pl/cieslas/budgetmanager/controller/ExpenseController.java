@@ -30,7 +30,8 @@ public class ExpenseController {
     private final CategoryService categoryService;
     private final AccountService accountService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService, CategoryService categoryService, AccountService accountService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService,
+                             CategoryService categoryService, AccountService accountService) {
         this.expenseService = expenseService;
         this.userService = userService;
         this.categoryService = categoryService;
@@ -76,7 +77,8 @@ public class ExpenseController {
     }
 
     @PostMapping("/add")
-    public String addExpense(@AuthenticationPrincipal CurrentUser currentUser, @Valid Expense expense, BindingResult result) {
+    public String addExpense(@AuthenticationPrincipal CurrentUser currentUser, @Valid Expense expense,
+                             BindingResult result) {
         if (result.hasErrors()) {
             return "expense/expenseAddForm";
         }
@@ -104,8 +106,9 @@ public class ExpenseController {
 
     //    edit expense
     @PostMapping("/edit/{id}")
-    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
-//        org expense details
+    public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser,
+                              @PathVariable long id) {
+        // org expense details
         Optional<Expense> orgExpense = expenseService.findById(id);
         Account orgAccount = orgExpense.get().getAccount();
         BigDecimal orgAmount = orgExpense.get().getAmount();
@@ -136,16 +139,13 @@ public class ExpenseController {
             orgAccount.setBalance(orgAccBalance.add(delta));
             accountService.save(orgAccount);
 
-        } else if (orgAccount != updatedAccount) { //account change && if updated > org;
+        } else if (orgAccount != updatedAccount) { //account change
             // subtract from orgAccount full amount, add to new account full amount
             updatedAccount.setBalance(updatedAccBalance.subtract(updatedAmount));
             accountService.save(updatedAccount);
             orgAccount.setBalance(orgAccBalance.add(orgAmount));
             accountService.save(orgAccount);
-
         }
-
-
         return "redirect:/expenses/all";
     }
 

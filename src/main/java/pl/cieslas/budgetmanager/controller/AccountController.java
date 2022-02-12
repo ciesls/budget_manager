@@ -69,7 +69,8 @@ public class AccountController {
     }
 
     @PostMapping("/transfer")
-    public String transfer(@RequestParam BigDecimal amount, @RequestParam long account1ID, @RequestParam long account2ID,
+    public String transfer(@RequestParam BigDecimal amount, @RequestParam long account1ID,
+                           @RequestParam long account2ID,
                            @AuthenticationPrincipal CurrentUser currentUser) {
 
         System.out.println(amount);
