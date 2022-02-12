@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import pl.cieslas.budgetmanager.entity.Income;
 import pl.cieslas.budgetmanager.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +22,5 @@ public interface IncomeRepository extends JpaRepository<Income, Long> {
 
     Income save(Income income);
 
+    List<Income> findAllByUserAndCreatedOnBetween(User user, LocalDate monthStart, LocalDate currentTime);
 }

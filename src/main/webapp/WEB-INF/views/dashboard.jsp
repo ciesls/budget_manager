@@ -144,6 +144,24 @@
                 </tr>
                 </tbody>
             </table>
+
+            <br>
+            Compare income with expenses in current month
+            <table id="datatablesSimple">
+                <thead>
+                <tr>
+                    <th>Income</th>
+                    <th>Expenses</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>${currentMonthIncome}</td>
+                    <td>${currentMonthExpensesSum}</td>
+                </tr>
+                </tbody>
+            </table>
+
     </div>
 </div>
 </div>

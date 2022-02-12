@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.cieslas.budgetmanager.entity.Income;
 import pl.cieslas.budgetmanager.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Primary
 @Transactional
-public class IncomeServiceImpl implements IncomeService{
+public class IncomeServiceImpl implements IncomeService {
 
     private IncomeRepository incomeRepository;
 
@@ -45,5 +46,10 @@ public class IncomeServiceImpl implements IncomeService{
     @Override
     public Income save(Income income) {
         return incomeRepository.save(income);
+    }
+
+    @Override
+    public List<Income> findAllByUserAndCreatedOnBetween(User user, LocalDate monthStart, LocalDate currentTime) {
+        return incomeRepository.findAllByUserAndCreatedOnBetween(user, monthStart, currentTime);
     }
 }

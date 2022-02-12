@@ -3,6 +3,7 @@ package pl.cieslas.budgetmanager.repository.income;
 import pl.cieslas.budgetmanager.entity.Income;
 import pl.cieslas.budgetmanager.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +19,5 @@ public interface IncomeService {
 
     Income save(Income income);
 
-
+    List<Income> findAllByUserAndCreatedOnBetween(User user, LocalDate monthStart, LocalDate currentTime);
 }
