@@ -72,6 +72,7 @@
                         </div>
                     </div>
                     <br>
+                    Budgets - spent this month vs planned
                     <table>
                         <thead>
                         <tr>

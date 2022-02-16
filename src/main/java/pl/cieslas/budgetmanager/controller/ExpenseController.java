@@ -113,8 +113,6 @@ public class ExpenseController {
         Account orgAccount = orgExpense.get().getAccount();
         BigDecimal orgAmount = orgExpense.get().getAmount();
         BigDecimal orgAccBalance = orgAccount.getBalance();
-        System.out.println(orgAccount.getName());
-        System.out.println(orgAmount);
 
         expense.setUser(currentUser.getUser());
         expenseService.saveExpense(expense);
@@ -124,8 +122,6 @@ public class ExpenseController {
         BigDecimal updatedAmount = updatedExpense.get().getAmount();
         Account updatedAccount = updatedExpense.get().getAccount();
         BigDecimal updatedAccBalance = updatedAccount.getBalance();
-        System.out.println(updatedAmount);
-        System.out.println(updatedAccount.getName());
 
         int result = orgAmount.compareTo(updatedAmount);
 

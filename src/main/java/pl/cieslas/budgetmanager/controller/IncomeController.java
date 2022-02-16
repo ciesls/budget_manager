@@ -93,7 +93,6 @@ public class IncomeController {
         BigDecimal orgAmount = orgIncome.get().getAmount();
         Account orgAccount = orgIncome.get().getAccount();
         BigDecimal orgAccBalance = orgAccount.getBalance();
-//        System.out.println(orgAccBalance);
 
         income.setUser(currentUser.getUser());
         incomeService.save(income);
