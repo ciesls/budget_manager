@@ -11,15 +11,17 @@ public class Savings {
     private Long id;
     private String name;
     private BigDecimal value;
+    private BigDecimal previousValue;
     private String description;
 
     @ManyToOne
     private User user;
 
-    public Savings(Long id, String name, BigDecimal value, String description) {
+    public Savings(Long id, String name, BigDecimal value, BigDecimal previousValue, String description) {
         this.id = id;
         this.name = name;
         this.value = value;
+        this.previousValue = previousValue;
         this.description = description;
     }
 
@@ -61,5 +63,17 @@ public class Savings {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getPreviousValue() {
+        return previousValue;
+    }
+
+    public void setPreviousValue(BigDecimal previousValue) {
+        this.previousValue = previousValue;
     }
 }
