@@ -20,4 +20,6 @@ public interface AccountService {
 
     BigDecimal sumOfAccounts(List<Account> accounts);
 
+    void transfer(BigDecimal amount, long accountID1, long accountID2, User user);
+
 }

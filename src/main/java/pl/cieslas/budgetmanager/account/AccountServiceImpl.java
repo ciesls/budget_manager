@@ -52,4 +52,16 @@ public class AccountServiceImpl implements AccountService {
         BigDecimal sum = accounts.stream().map(Account::getBalance).reduce(BigDecimal.ZERO, BigDecimal::add);
         return sum;
     }
+
+    @Override
+    public void transfer(BigDecimal amount, long accountID1, long accountID2, User user) {
+        Optional<Account> acc1 = accountRepository.findByIdAndUser(accountID1, user);
+        Optional<Account> acc2 = accountRepository.findByIdAndUser(accountID2, user);
+        BigDecimal acc1Balance = acc1.get().getBalance();
+        BigDecimal acc2Balance = acc2.get().getBalance();
+        acc2.get().setBalance(acc2Balance.add(amount));
+        acc1.get().setBalance(acc1Balance.subtract(amount));
+        accountRepository.save(acc1.get());
+        accountRepository.save(acc2.get());
+    }
 }

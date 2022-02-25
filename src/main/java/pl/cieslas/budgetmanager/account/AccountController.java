@@ -71,14 +71,16 @@ public class AccountController {
                            @RequestParam long account2ID,
                            @AuthenticationPrincipal CurrentUser currentUser) {
 
-        Optional<Account> acc1 = accountService.findByIdAndUser(account1ID, currentUser.getUser());
-        Optional<Account> acc2 = accountService.findByIdAndUser(account2ID, currentUser.getUser());
-        BigDecimal acc1Balance = acc1.get().getBalance();
-        BigDecimal acc2Balance = acc2.get().getBalance();
-        acc2.get().setBalance(acc2Balance.add(amount));
-        acc1.get().setBalance(acc1Balance.subtract(amount));
-        accountService.save(acc1.get());
-        accountService.save(acc2.get());
+//        Optional<Account> acc1 = accountService.findByIdAndUser(account1ID, currentUser.getUser());
+//        Optional<Account> acc2 = accountService.findByIdAndUser(account2ID, currentUser.getUser());
+//        BigDecimal acc1Balance = acc1.get().getBalance();
+//        BigDecimal acc2Balance = acc2.get().getBalance();
+//        acc2.get().setBalance(acc2Balance.add(amount));
+//        acc1.get().setBalance(acc1Balance.subtract(amount));
+//        accountService.save(acc1.get());
+//        accountService.save(acc2.get());
+
+        accountService.transfer(amount, account1ID, account2ID, currentUser.getUser());
 
         return "redirect:/account/all";
     }
