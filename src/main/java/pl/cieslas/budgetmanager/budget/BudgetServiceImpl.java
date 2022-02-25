@@ -6,13 +6,12 @@ import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
 import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Primary
@@ -65,7 +64,8 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public BigDecimal calculateExpensesInBudgetDates(List<Category> categories, User currentUser, LocalDate monthStart, LocalDate currentTime) {
+    public BigDecimal calculateExpensesInBudgetDates(List<Category> categories, User currentUser,
+                                                     LocalDate monthStart, LocalDate currentTime) {
         // get categories in budget, iterate and calculate sum of expenses in give list
 
         BigDecimal categorySum = BigDecimal.ZERO;
@@ -103,39 +103,32 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<Expense> getBudgetExpensesDates(List<Category> categories, User user, LocalDate startTime, LocalDate endTime) {
+    public List<Expense> getBudgetExpensesDates(List<Category> categories, User user, LocalDate startTime,
+                                                LocalDate endTime) {
         List<Expense> allBudgetExpenses = new ArrayList<>();
         for (int i = 0; i < categories.size(); i++) {
-            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(categories.get(i), user, startTime, endTime));
+            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(categories.get(i),
+                    user, startTime, endTime));
         }
         return allBudgetExpenses;
     }
 
+
     @Override
-    public void setBudgetOther(Budget budget, List<Category> categories, User user) {
-        Budget budgetOther = budgetRepository.findByNameAndUser("Other", user);
-        if (budgetOther == null) {
-            Budget newBudget = new Budget();
-            newBudget.setName("Other");
-            newBudget.setAmount(BigDecimal.ZERO);
-            newBudget.setUser(user);
-            budgetRepository.save(newBudget);
+    public Map<Budget, BigDecimal> getBudgetSum(User user, List<Budget> budgets, LocalDate startTime, LocalDate now) {
+        budgets = budgetRepository.findAllByUser(user);
+        Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
+        for (int i = 0; i < budgets.size(); i++) {
+            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(user,
+                    (budgets.get(i)));
+            BigDecimal budgetSum = calculateExpensesInBudgetDates(budgetCategories,
+                    user, startTime, now);
+            budgetAmount.put(budgets.get(i), budgetSum);
         }
-        Category categoryOther = categoryService.findByNameAndUser("Other", user);
-        if (categoryOther == null) {
-            Category newCategory = new Category();
-            newCategory.setUser(user);
-            newCategory.setName("Other");
-            newCategory.setBudget(budgetRepository.findByNameAndUser("Other", user));
-            categoryService.saveCategory(newCategory);
-
-        }
-
-        categories = categoryService.findAllByUserAndBudget(user, budget);
-        for (int i = 0; i < categories.size(); i++) {
-            categories.get(i).setBudget(budgetRepository.findByNameAndUser("Other", user));
-        }
+        return budgetAmount;
     }
 }
+
+
 
 

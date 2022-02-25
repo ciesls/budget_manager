@@ -71,9 +71,6 @@ public class AccountController {
                            @RequestParam long account2ID,
                            @AuthenticationPrincipal CurrentUser currentUser) {
 
-        System.out.println(amount);
-        System.out.println(account1ID);
-        System.out.println(account2ID);
         Optional<Account> acc1 = accountService.findByIdAndUser(account1ID, currentUser.getUser());
         Optional<Account> acc2 = accountService.findByIdAndUser(account2ID, currentUser.getUser());
         BigDecimal acc1Balance = acc1.get().getBalance();

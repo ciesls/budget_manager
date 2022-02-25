@@ -8,6 +8,7 @@ import pl.cieslas.budgetmanager.budget.Budget;
 import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.budget.BudgetService;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.updates.Updates;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.UserService;
 
@@ -24,15 +25,17 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
+    private final Updates updates;
 
 
     public CategoryController(UserService userService, CategoryService categoryService, BudgetService budgetService,
-                              ExpenseService expenseService) {
+                              ExpenseService expenseService, Updates updates) {
 
         this.userService = userService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.expenseService = expenseService;
+        this.updates = updates;
     }
 
     @ModelAttribute("localDateTimeFormat")
@@ -76,6 +79,7 @@ public class CategoryController {
         LocalDate now = LocalDate.now();
         Optional<Category> category = categoryService.findById(id);
 
+//        move attributes to dto
         model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
                 (category.get(), currentUser.getUser()));
         model.addAttribute("categorySum", expenseService.sumOfExpenses
@@ -108,7 +112,7 @@ public class CategoryController {
     public String deleteCategory(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
         Optional<Category> category = categoryService.findById(id);
         List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser());
-        categoryService.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
+        updates.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
         categoryService.deleteById(id);
 
         return "redirect:/categories/all";

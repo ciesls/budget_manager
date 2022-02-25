@@ -8,6 +8,7 @@ import pl.cieslas.budgetmanager.budget.Budget;
 import pl.cieslas.budgetmanager.budget.BudgetRepository;
 import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.updates.Updates;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -18,18 +19,22 @@ import java.util.stream.Collectors;
 @Service
 @Primary
 @Transactional
-public class CategoryServiceImpl implements CategoryService{
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final ExpenseService expenseService;
-    private final BudgetRepository budgetRepository;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService, BudgetRepository budgetRepository, Updates updates) {
+        this.categoryRepository = categoryRepository;
+        this.expenseService = expenseService;
+    }
+
 
     @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService,
                                BudgetRepository budgetRepository) {
         this.categoryRepository = categoryRepository;
         this.expenseService = expenseService;
-        this.budgetRepository = budgetRepository;
     }
 
     @Override
@@ -98,32 +103,7 @@ public class CategoryServiceImpl implements CategoryService{
         return categorySumMapSorted;
     }
 
-    @Override
-    public void setCategoryOther(Category category, List<Expense> expenses, User user) {
-        Budget budgetOther = budgetRepository.findByNameAndUser("Other", user);
-        if (budgetOther == null) {
-            Budget newBudget = new Budget();
-            newBudget.setName("Other");
-            newBudget.setAmount(BigDecimal.ZERO);
-            newBudget.setUser(user);
-            budgetRepository.save(newBudget);
-        }
-
-        Category categoryOther = categoryRepository.findByNameAndUser("Other", user);
-        if (categoryOther == null) {
-            Category newCategory = new Category();
-            newCategory.setUser(user);
-            newCategory.setName("Other");
-            newCategory.setBudget(budgetRepository.findByNameAndUser("Other", user));
-            categoryRepository.save(newCategory);
-
-        }
-
-        expenses = expenseService.findAllByCategoryAndUser(category, user);
-        for (Expense expense : expenses) {
-            expense.setCategory(categoryRepository.findByNameAndUser("Other", user));
-
-        }
-    }
 
 }
+
+

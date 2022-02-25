@@ -89,16 +89,16 @@ public class DashboardController {
         LocalDate startTime = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         List<Budget> budgets = budgetService.findAllByUser(currentUser.getUser());
-        Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
-        for (int i = 0; i < budgets.size(); i++) {
-            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(),
-                    (budgets.get(i)));
-            BigDecimal budgetSum = budgetService.calculateExpensesInBudgetDates(budgetCategories,
-                    currentUser.getUser(), startTime, now);
-            budgetAmount.put(budgets.get(i), budgetSum);
-        }
-
-        return budgetAmount;
+//        Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
+//        for (int i = 0; i < budgets.size(); i++) {
+//            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(),
+//                    (budgets.get(i)));
+//            BigDecimal budgetSum = budgetService.calculateExpensesInBudgetDates(budgetCategories,
+//                    currentUser.getUser(), startTime, now);
+//            budgetAmount.put(budgets.get(i), budgetSum);
+//        }
+//        return budgetAmount;
+        return budgetService.getBudgetSum(currentUser.getUser(), budgets, startTime, now);
     }
 
     //    add categories with sums

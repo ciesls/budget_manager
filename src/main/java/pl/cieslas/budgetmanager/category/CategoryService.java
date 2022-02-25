@@ -31,6 +31,5 @@ public interface CategoryService {
     Map<Category, BigDecimal> getCategorySum(User user, List<Category> categories,
                                              LocalDate startTIme, LocalDate endTime);
 
-    void setCategoryOther(Category category, List<Expense> expenses, User user);
 
 }

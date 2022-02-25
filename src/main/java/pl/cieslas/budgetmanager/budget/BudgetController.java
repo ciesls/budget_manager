@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
-import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.updates.Updates;
 import pl.cieslas.budgetmanager.user.CurrentUser;
-import pl.cieslas.budgetmanager.user.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -26,10 +25,12 @@ public class BudgetController {
 
     private final BudgetService budgetService;
     private final CategoryService categoryService;
+    private final Updates updatesService;
 
-    public BudgetController(BudgetService budgetService, CategoryService categoryService) {
+    public BudgetController(BudgetService budgetService, CategoryService categoryService, Updates updatesService) {
         this.budgetService = budgetService;
         this.categoryService = categoryService;
+        this.updatesService = updatesService;
     }
 
     //  show budget form
@@ -86,6 +87,7 @@ public class BudgetController {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(currentUser.getUser(), id);
+//        move to DTO
         budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
 //      get categories from budget
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
@@ -124,7 +126,7 @@ public class BudgetController {
     public String deleteBudget(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
         Optional<Budget> budget = budgetService.findById(id);
         List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        budgetService.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
+        updatesService.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
         budgetService.deleteById(id);
 
         return "redirect:/budgets/all";

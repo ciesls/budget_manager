@@ -2,11 +2,13 @@ package pl.cieslas.budgetmanager.budget;
 
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.expense.Expense;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface BudgetService {
@@ -34,6 +36,5 @@ public interface BudgetService {
 
     List<Expense> getBudgetExpensesDates(List<Category> categories, User user, LocalDate startTime, LocalDate endTime);
 
-    void setBudgetOther(Budget budget, List<Category> categories, User user);
-
+    Map<Budget, BigDecimal> getBudgetSum(User user, List<Budget> budgets, LocalDate startTime, LocalDate now);
 }
