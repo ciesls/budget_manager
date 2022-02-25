@@ -15,7 +15,7 @@
 <%--    <title>Title</title>--%>
 <%--</head>--%>
 <%--<body>--%>
-<%--&lt;%&ndash;@elvariable id="budget" type="pl.cieslas.budgetmanager.entity.Budget"&ndash;%&gt;--%>
+<%--&lt;%&ndash;@elvariable id="budget" type="pl.cieslas.budgetmanager.budget.Budget"&ndash;%&gt;--%>
 <%--<form:form method="post"--%>
 <%--           modelAttribute="budget">--%>
 

@@ -5,15 +5,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import pl.cieslas.budgetmanager.entity.Budget;
-import pl.cieslas.budgetmanager.entity.Category;
-import pl.cieslas.budgetmanager.entity.Expense;
-import pl.cieslas.budgetmanager.repository.budget.BudgetService;
-import pl.cieslas.budgetmanager.repository.category.CategoryService;
-import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
-import pl.cieslas.budgetmanager.security.CurrentUser;
-import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
-import pl.cieslas.budgetmanager.utils.ExpenseUtils.ExpenseUtils;
+import pl.cieslas.budgetmanager.budget.Budget;
+import pl.cieslas.budgetmanager.category.Category;
+import pl.cieslas.budgetmanager.expense.Expense;
+import pl.cieslas.budgetmanager.budget.BudgetService;
+import pl.cieslas.budgetmanager.category.CategoryService;
+import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,19 +22,15 @@ import java.util.Optional;
 public class StatsController {
 
     private final CategoryService categoryService;
-    private final ExpenseUtils expenseUtils;
     private final ExpenseService expenseService;
     private final BudgetService budgetService;
-    private final BudgetUtils budgetUtils;
 
 
-    public StatsController(CategoryService categoryService, ExpenseUtils expenseUtils, ExpenseService expenseService,
-                           BudgetService budgetService, BudgetUtils budgetUtils) {
+    public StatsController(CategoryService categoryService, ExpenseService expenseService,
+                           BudgetService budgetService) {
         this.categoryService = categoryService;
-        this.expenseUtils = expenseUtils;
         this.expenseService = expenseService;
         this.budgetService = budgetService;
-        this.budgetUtils = budgetUtils;
     }
 
     @ModelAttribute("budgets")
@@ -65,7 +59,7 @@ public class StatsController {
         List<Expense> expenses = expenseService.findAllByCategoryAndUserAndCreatedOnBetween(category.get(),
                 currentUser.getUser(), startDate, endDate);
         redirectAttributes.addFlashAttribute("category", category.get());
-        redirectAttributes.addFlashAttribute("groupedByCategory", expenseUtils.groupExpensesByMonth(expenses));
+        redirectAttributes.addFlashAttribute("groupedByCategory", expenseService.groupExpensesByMonth(expenses));
 
         return "redirect:/stats/categoriesStats";
     }
@@ -89,10 +83,10 @@ public class StatsController {
 
         Optional<Budget> budget = budgetService.findById(budgetID);
         List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        List<Expense> expensesBudget = budgetUtils.getBudgetExpensesDates(categoriesBudget,
+        List<Expense> expensesBudget = budgetService.getBudgetExpensesDates(categoriesBudget,
                 currentUser.getUser(), startDate, endDate);
         redirectAttributes.addFlashAttribute("expensesGrouped",
-                expenseUtils.groupExpensesByMonth(expensesBudget));
+                expenseService.groupExpensesByMonth(expensesBudget));
         redirectAttributes.addFlashAttribute("budget", budget.get());
         return "redirect:/stats/budgetStats";
 

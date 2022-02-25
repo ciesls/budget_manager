@@ -33,21 +33,21 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Description/type</th>
-                                <th>Value</th>
+                                <th>Current value</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                                 <th>Details</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="saving" items="${savings}">
+                            <c:forEach var="saving" items="${allSavings}">
                                 <tr>
                                     <td>${saving.name}</td>
                                     <td>${saving.description}</td>
                                     <td>${saving.value}</td>
-                                    <td><a href="/budgets/edit/${saving.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${saving.id}">Delete</a></td>
-                                    <td><a href="/budgets/details/${saving.id}">Details</a></td>
+                                    <td><a href="/savings/edit/${saving.id}">Edit</a></td>
+                                    <td><a href="/savings/delete/${saving.id}">Delete</a></td>
+                                    <td><a href="/savings/details/${saving.id}">Details</a></td>
                                 </tr>
                             </c:forEach>
                             </tbody>

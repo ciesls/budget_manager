@@ -30,7 +30,7 @@
 <div id="layoutSidenav">
     <jsp:include page="../staticElements/leftNavBar.jsp"/>
 <div id="layoutSidenav">
-    <%--@elvariable id="account" type="pl.cieslas.budgetmanager.entity.Account"--%>
+    <%--@elvariable id="account" type="pl.cieslas.budgetmanager.account.Account"--%>
     <form:form method="post"
                modelAttribute="account">
             <form:hidden path="id"/>

@@ -5,18 +5,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import pl.cieslas.budgetmanager.entity.*;
-import pl.cieslas.budgetmanager.repository.account.AccountService;
-import pl.cieslas.budgetmanager.repository.budget.BudgetService;
-import pl.cieslas.budgetmanager.repository.category.CategoryService;
-import pl.cieslas.budgetmanager.repository.expense.ExpenseService;
-import pl.cieslas.budgetmanager.repository.income.IncomeService;
-import pl.cieslas.budgetmanager.security.CurrentUser;
-import pl.cieslas.budgetmanager.utils.AccountUtils.AccountUtils;
-import pl.cieslas.budgetmanager.utils.AccountUtils.IncomeUtils;
-import pl.cieslas.budgetmanager.utils.BudgetUtils.BudgetUtils;
-import pl.cieslas.budgetmanager.utils.CategoryUtils.CategoryUtils;
-import pl.cieslas.budgetmanager.utils.ExpenseUtils.ExpenseUtils;
+import pl.cieslas.budgetmanager.account.Account;
+import pl.cieslas.budgetmanager.account.AccountService;
+import pl.cieslas.budgetmanager.budget.Budget;
+import pl.cieslas.budgetmanager.budget.BudgetService;
+import pl.cieslas.budgetmanager.category.Category;
+import pl.cieslas.budgetmanager.category.CategoryService;
+import pl.cieslas.budgetmanager.expense.Expense;
+import pl.cieslas.budgetmanager.expense.ExpenseService;
+import pl.cieslas.budgetmanager.income.Income;
+import pl.cieslas.budgetmanager.income.IncomeService;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,28 +31,16 @@ public class DashboardController {
     private final ExpenseService expenseService;
     private final CategoryService categoryService;
     private final BudgetService budgetService;
-    private final BudgetUtils budgetUtils;
-    private final CategoryUtils categoryUtils;
     private final AccountService accountService;
-    private final AccountUtils accountUtils;
-    private final ExpenseUtils expenseUtils;
     private final IncomeService incomeService;
-    private final IncomeUtils incomeUtils;
 
     public DashboardController(ExpenseService expenseService, CategoryService categoryService,
-                               BudgetService budgetService, BudgetUtils budgetUtils, CategoryUtils categoryUtils,
-                               AccountService accountService, AccountUtils accountUtils, ExpenseUtils expenseUtils,
-                               IncomeService incomeService, IncomeUtils incomeUtils) {
+                               BudgetService budgetService, AccountService accountService, IncomeService incomeService) {
         this.expenseService = expenseService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
-        this.budgetUtils = budgetUtils;
-        this.categoryUtils = categoryUtils;
         this.accountService = accountService;
-        this.accountUtils = accountUtils;
-        this.expenseUtils = expenseUtils;
         this.incomeService = incomeService;
-        this.incomeUtils = incomeUtils;
     }
 
     @ModelAttribute("localDateTimeFormat")
@@ -82,7 +69,7 @@ public class DashboardController {
         startTime = LocalDate.now().withDayOfMonth(1);
         now = LocalDate.now();
         List<Expense> expenses = expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
-        return expenseUtils.sumOfExpenses(expenses);
+        return expenseService.sumOfExpenses(expenses);
 
     }
 
@@ -106,7 +93,7 @@ public class DashboardController {
         for (int i = 0; i < budgets.size(); i++) {
             List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(),
                     (budgets.get(i)));
-            BigDecimal budgetSum = budgetUtils.calculateExpensesInBudgetDates(budgetCategories,
+            BigDecimal budgetSum = budgetService.calculateExpensesInBudgetDates(budgetCategories,
                     currentUser.getUser(), startTime, now);
             budgetAmount.put(budgets.get(i), budgetSum);
         }
@@ -120,7 +107,7 @@ public class DashboardController {
         List<Category> categories = categoryService.findAllByUser(currentUser.getUser());
         LocalDate startTime = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
-        return categoryUtils.getCategorySum(currentUser.getUser(), categories, startTime, now);
+        return categoryService.getCategorySum(currentUser.getUser(), categories, startTime, now);
     }
 
     @ModelAttribute("accounts")
@@ -132,17 +119,17 @@ public class DashboardController {
     @ModelAttribute("balanceSum")
     public BigDecimal balanceSum(@AuthenticationPrincipal CurrentUser currentUser) {
         List<Account> accounts = accountService.findAllByUser(currentUser.getUser());
-        return accountUtils.sumOfAccounts(accounts);
+        return accountService.sumOfAccounts(accounts);
 
     }
 
     @ModelAttribute("currentMonthIncome")
     public BigDecimal currentMonthIncomeSum(@AuthenticationPrincipal CurrentUser currentUser,
-                                             LocalDate startTime, LocalDate now) {
+                                            LocalDate startTime, LocalDate now) {
         startTime = LocalDate.now().withDayOfMonth(1);
         now = LocalDate.now();
         List<Income> incomes = incomeService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
-        return incomeUtils.sumOfIncome(incomes);
+        return incomeService.sumOfIncome(incomes);
     }
 
     @GetMapping
