@@ -21,7 +21,6 @@ import java.util.Optional;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final UserService userService;
     private final CategoryService categoryService;
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
@@ -31,7 +30,6 @@ public class CategoryController {
     public CategoryController(UserService userService, CategoryService categoryService, BudgetService budgetService,
                               ExpenseService expenseService, Updates updates) {
 
-        this.userService = userService;
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.expenseService = expenseService;
@@ -79,12 +77,10 @@ public class CategoryController {
         LocalDate now = LocalDate.now();
         Optional<Category> category = categoryService.findById(id);
 
-//        move attributes to dto
         model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
                 (category.get(), currentUser.getUser()));
         model.addAttribute("categorySum", expenseService.sumOfExpenses
-                (expenseService.findAllByCategoryAndUser(
-                category.get(), currentUser.getUser())));
+                (expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser())));
         model.addAttribute("monthSum", expenseService.sumOfExpenses
                 (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
                 category.get(), currentUser.getUser(), monthStart, now)));

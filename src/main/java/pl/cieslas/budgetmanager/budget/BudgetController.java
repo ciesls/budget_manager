@@ -110,7 +110,6 @@ public class BudgetController {
         return "categories/userCategoriesBudgets";
     }
 
-    //    show all expenses in budget
     @GetMapping("/budgetExpenses/{id}")
     public String getAllExpensesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, Model model,
                                            @PathVariable long id) {
@@ -128,8 +127,6 @@ public class BudgetController {
         List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         updatesService.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
         budgetService.deleteById(id);
-
         return "redirect:/budgets/all";
-
     }
 }

@@ -22,4 +22,8 @@ public interface AccountService {
 
     void transfer(BigDecimal amount, long accountID1, long accountID2, User user);
 
+    void updateAccountWithAmount(Account orgAccount, BigDecimal orgAmount,
+                                 BigDecimal orgAccBalance, BigDecimal updatedAmount,
+                                 Account updatedAccount, BigDecimal updatedAccBalance);
+
 }

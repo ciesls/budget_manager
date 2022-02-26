@@ -101,27 +101,8 @@ public class IncomeController {
         Account updatedAccount = updatedIncome.get().getAccount();
         BigDecimal updatedAccBalance = updatedAccount.getBalance();
 
-        int result = orgAmount.compareTo(updatedAmount);
+        accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
 
-        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
-            BigDecimal delta = updatedAmount.subtract(orgAmount);
-            orgAccount.setBalance(orgAccBalance.add(delta));
-            accountService.save(orgAccount);
-
-        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
-            BigDecimal delta = orgAmount.subtract(updatedAmount);
-            orgAccount.setBalance(orgAccBalance.subtract(delta));
-            accountService.save(orgAccount);
-
-//            to be finished - how to move amounts between accounts
-        } else if (orgAccount != updatedAccount) { //account change && if updated > org;
-            // subtract from orgAccount full amount, add to new account full amount
-            updatedAccount.setBalance(updatedAccBalance.add(updatedAmount));
-            accountService.save(updatedAccount);
-            orgAccount.setBalance(orgAccBalance.subtract(orgAmount));
-            accountService.save(orgAccount);
-
-        }
         return "redirect:/income/all";
     }
 }

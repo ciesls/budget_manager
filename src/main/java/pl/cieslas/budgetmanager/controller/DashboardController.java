@@ -60,7 +60,6 @@ public class DashboardController {
         startTime = LocalDate.now().withDayOfMonth(1);
         now = LocalDate.now();
         return expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
-
     }
 
     @ModelAttribute("currentMonthExpensesSum")
@@ -70,7 +69,6 @@ public class DashboardController {
         now = LocalDate.now();
         List<Expense> expenses = expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
         return expenseService.sumOfExpenses(expenses);
-
     }
 
     @ModelAttribute("last5Expenses")
@@ -89,15 +87,6 @@ public class DashboardController {
         LocalDate startTime = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         List<Budget> budgets = budgetService.findAllByUser(currentUser.getUser());
-//        Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
-//        for (int i = 0; i < budgets.size(); i++) {
-//            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(),
-//                    (budgets.get(i)));
-//            BigDecimal budgetSum = budgetService.calculateExpensesInBudgetDates(budgetCategories,
-//                    currentUser.getUser(), startTime, now);
-//            budgetAmount.put(budgets.get(i), budgetSum);
-//        }
-//        return budgetAmount;
         return budgetService.getBudgetSum(currentUser.getUser(), budgets, startTime, now);
     }
 
@@ -115,12 +104,10 @@ public class DashboardController {
         return accountService.findAllByUser(currentUser.getUser());
     }
 
-
     @ModelAttribute("balanceSum")
     public BigDecimal balanceSum(@AuthenticationPrincipal CurrentUser currentUser) {
         List<Account> accounts = accountService.findAllByUser(currentUser.getUser());
         return accountService.sumOfAccounts(accounts);
-
     }
 
     @ModelAttribute("currentMonthIncome")
@@ -136,6 +123,5 @@ public class DashboardController {
     public String showDashboard() {
         return "dashboard";
     }
-
 
 }

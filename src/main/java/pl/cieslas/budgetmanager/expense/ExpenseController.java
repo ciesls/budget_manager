@@ -121,25 +121,8 @@ public class ExpenseController {
         Account updatedAccount = updatedExpense.get().getAccount();
         BigDecimal updatedAccBalance = updatedAccount.getBalance();
 
-        int result = orgAmount.compareTo(updatedAmount);
+        accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
 
-        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
-            BigDecimal delta = updatedAmount.subtract(orgAmount);
-            orgAccount.setBalance(orgAccBalance.subtract(delta));
-            accountService.save(orgAccount);
-
-        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
-            BigDecimal delta = orgAmount.subtract(updatedAmount);
-            orgAccount.setBalance(orgAccBalance.add(delta));
-            accountService.save(orgAccount);
-
-        } else if (orgAccount != updatedAccount) { //account change
-            // subtract from orgAccount full amount, add to new account full amount
-            updatedAccount.setBalance(updatedAccBalance.subtract(updatedAmount));
-            accountService.save(updatedAccount);
-            orgAccount.setBalance(orgAccBalance.add(orgAmount));
-            accountService.save(orgAccount);
-        }
         return "redirect:/expenses/all";
     }
 

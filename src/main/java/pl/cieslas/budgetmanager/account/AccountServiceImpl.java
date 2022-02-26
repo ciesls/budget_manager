@@ -64,4 +64,29 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.save(acc1.get());
         accountRepository.save(acc2.get());
     }
+
+    @Override
+    public void updateAccountWithAmount(Account orgAccount, BigDecimal orgAmount, BigDecimal orgAccBalance,
+                                        BigDecimal updatedAmount, Account updatedAccount, BigDecimal updatedAccBalance) {
+        int result = orgAmount.compareTo(updatedAmount);
+
+        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
+            BigDecimal delta = updatedAmount.subtract(orgAmount);
+            orgAccount.setBalance(orgAccBalance.subtract(delta));
+            accountRepository.save(orgAccount);
+
+        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
+            BigDecimal delta = orgAmount.subtract(updatedAmount);
+            orgAccount.setBalance(orgAccBalance.add(delta));
+            accountRepository.save(orgAccount);
+
+        } else if (orgAccount != updatedAccount) { //account change
+            // subtract from orgAccount full amount, add to new account full amount
+            updatedAccount.setBalance(updatedAccBalance.subtract(updatedAmount));
+            accountRepository.save(updatedAccount);
+            orgAccount.setBalance(orgAccBalance.add(orgAmount));
+            accountRepository.save(orgAccount);
+        }
+
+    }
 }

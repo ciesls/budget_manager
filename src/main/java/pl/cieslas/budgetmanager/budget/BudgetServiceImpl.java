@@ -67,9 +67,7 @@ public class BudgetServiceImpl implements BudgetService {
     public BigDecimal calculateExpensesInBudgetDates(List<Category> categories, User currentUser,
                                                      LocalDate monthStart, LocalDate currentTime) {
         // get categories in budget, iterate and calculate sum of expenses in give list
-
         BigDecimal categorySum = BigDecimal.ZERO;
-
         for (Category category : categories) {
             List<Expense> expensesCategory = expenseService.findAllByCategoryAndUserAndCreatedOnBetween
                     (category, currentUser, monthStart, currentTime);
@@ -81,9 +79,7 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public BigDecimal calculateExpensesInBudget(List<Category> categories, User currentUser) {
         // get categories in budget, iterate and calculate sum of expenses in give list
-
         BigDecimal categorySum = BigDecimal.ZERO;
-
         for (Category category : categories) {
             List<Expense> expensesCategory = expenseService.findAllByCategoryAndUser(category, currentUser);
             categorySum = categorySum.add(expenseService.sumOfExpenses(expensesCategory));
@@ -106,24 +102,22 @@ public class BudgetServiceImpl implements BudgetService {
     public List<Expense> getBudgetExpensesDates(List<Category> categories, User user, LocalDate startTime,
                                                 LocalDate endTime) {
         List<Expense> allBudgetExpenses = new ArrayList<>();
-        for (int i = 0; i < categories.size(); i++) {
-            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(categories.get(i),
+        for (Category category : categories) {
+            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUserAndCreatedOnBetween(category,
                     user, startTime, endTime));
         }
         return allBudgetExpenses;
     }
 
-
     @Override
     public Map<Budget, BigDecimal> getBudgetSum(User user, List<Budget> budgets, LocalDate startTime, LocalDate now) {
         budgets = budgetRepository.findAllByUser(user);
         Map<Budget, BigDecimal> budgetAmount = new HashMap<>();
-        for (int i = 0; i < budgets.size(); i++) {
+        for (Budget budget : budgets) {
             List<Category> budgetCategories = categoryService.findAllByUserAndBudget(user,
-                    (budgets.get(i)));
-            BigDecimal budgetSum = calculateExpensesInBudgetDates(budgetCategories,
-                    user, startTime, now);
-            budgetAmount.put(budgets.get(i), budgetSum);
+                    budget);
+            BigDecimal budgetSum = calculateExpensesInBudgetDates(budgetCategories, user, startTime, now);
+            budgetAmount.put(budget, budgetSum);
         }
         return budgetAmount;
     }
