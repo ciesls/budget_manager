@@ -14,7 +14,7 @@ public interface ExpenseService {
 
     Optional<Expense> findById(Long id);
 
-    Optional<Expense> getPerUser(Long id, User user);
+    Optional<Expense> findByIdAndUser(Long id, User user);
 
     List<Expense> findAllByUser(User user);
 

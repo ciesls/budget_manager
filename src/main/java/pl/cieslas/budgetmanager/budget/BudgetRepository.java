@@ -10,6 +10,8 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     Optional<Budget> findById(Long id);
 
+    Optional<Budget> findByIdAndUser(Long id, User user);
+
     Optional<Budget> findByUserAndIdOrderByAmountDesc(User user, Long id);
 
     List<Budget> findAllByUser(User user);

@@ -60,7 +60,7 @@ public class ExpenseController {
 
     @GetMapping("/details/{id}")
     public String getExpense(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id, Model model) {
-        Optional<Expense> expense = expenseService.getPerUser(id, currentUser.getUser());
+        Optional<Expense> expense = expenseService.findByIdAndUser(id, currentUser.getUser());
         if (expense.isPresent()) {
             model.addAttribute("expense", expense.get());
         } else throw new RuntimeException("Expense not found");
@@ -91,14 +91,16 @@ public class ExpenseController {
             account.get().setBalance(currentBalance.subtract(expense.getAmount()));
             accountService.save(account.get());
         }
-//improve handling of optionals - throw exception
         return "redirect:/expenses/all";
     }
 
     //    show form for editing expense
     @GetMapping("/edit/{id}")
-    public String editExpenseForm(Model model, @PathVariable long id) {
-        model.addAttribute("expense", expenseService.findById(id));
+    public String editExpenseForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Expense> expense = expenseService.findByIdAndUser(id, currentUser.getUser());
+        if (expense.isPresent()) {
+            model.addAttribute("expense", expense.get());
+        } else throw new RuntimeException("Expense not found");
         return "expense/expenseEditForm";
     }
 
@@ -129,18 +131,16 @@ public class ExpenseController {
 
     @GetMapping("/delete/{id}")
     public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
-        Optional<Expense> expense = expenseService.findById(id);
-        expenseService.deleteByIdAndUser(id, currentUser.getUser());
-        Long accountId = expense.get().getAccount().getId();
-        Optional<Account> account = accountService.findById(accountId);
-        if (account.isPresent()) {
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.add(expense.get().getAmount()));
-            accountService.save(account.get());
+        Optional<Expense> expense = expenseService.findByIdAndUser(id, currentUser.getUser());
+        if (expense.isPresent()) {
+            expenseService.deleteByIdAndUser(id, currentUser.getUser());
+            Long accountId = expense.get().getAccount().getId();
+            Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
+                BigDecimal currentBalance = account.get().getBalance();
+                account.get().setBalance(currentBalance.add(expense.get().getAmount()));
+                accountService.save(account.get());
+            } else throw new RuntimeException("Expense not found");
+            return "redirect:/expenses/all";
         }
-
-        return "redirect:/expenses/all";
-    }
-
 
 }

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface CategoryService {
 
-    Optional<Category> getCategoryPerUser(Long id, User user);
+    Optional<Category> findByIdAndUser(Long id, User user);
 
     List<Category> findAllByUser(User user);
 

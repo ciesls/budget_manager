@@ -34,7 +34,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Optional<Expense> getPerUser(Long id, User user) {
+    public Optional<Expense> findByIdAndUser(Long id, User user) {
         return expenseRepository.findByIdAndUser(id, user);
     }
 

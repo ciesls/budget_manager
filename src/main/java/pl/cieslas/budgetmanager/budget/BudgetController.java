@@ -44,7 +44,7 @@ public class BudgetController {
     @PostMapping("/add")
     public String addBudget(@Valid Budget budget, BindingResult result,
                             @AuthenticationPrincipal CurrentUser currentUser) {
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "budget/budgetAddForm";
         }
         budget.setUser(currentUser.getUser());
@@ -61,8 +61,11 @@ public class BudgetController {
 
     //    show form for editing budget
     @GetMapping("/edit/{id}")
-    public String editBudgetForm(Model model, @PathVariable long id) {
-        model.addAttribute("budget", budgetService.findById(id));
+    public String editBudgetForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Budget> budget = budgetService.findByIdAndUser(id, currentUser.getUser());
+        if (budget.isPresent()) {
+            model.addAttribute("budget", budget.get());
+        } else throw new RuntimeException("Budget not found");
         return "budget/budgetEditForm";
     }
 
@@ -83,7 +86,6 @@ public class BudgetController {
 //        move to DTO
         budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
 //      get categories from budget
-
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 //      get sum of expenses in budget in current month
@@ -98,29 +100,34 @@ public class BudgetController {
     public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser currentUser,
                                              @PathVariable long id, Model model) {
         Optional<Budget> budget = budgetService.findById(id);
-        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        model.addAttribute("categoriesBudget", budgetCategories);
-
+        if (budget.isPresent()) {
+            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
+            model.addAttribute("categoriesBudget", budgetCategories);
+        } else throw new RuntimeException("Budget not found");
         return "categories/userCategoriesBudgets";
     }
 
     @GetMapping("/budgetExpenses/{id}")
     public String getAllExpensesFromBudget(@AuthenticationPrincipal CurrentUser currentUser, Model model,
                                            @PathVariable long id) {
-        Optional<Budget> budget = budgetService.findById(id);
-        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        model.addAttribute("budgetExpenses",
-                budgetService.getBudgetExpenses(budgetCategories, currentUser.getUser()));
+        Optional<Budget> budget = budgetService.findByIdAndUser(id, currentUser.getUser());
+        if (budget.isPresent()) {
+            List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
+            model.addAttribute("budgetExpenses",
+                    budgetService.getBudgetExpenses(budgetCategories, currentUser.getUser()));
+        } else throw new RuntimeException("Budget not found");
         return "budget/userBudgetExpenses";
     }
 
     //    delete budget and set its categories do Other
     @GetMapping("/delete/{id}")
     public String deleteBudget(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
-        Optional<Budget> budget = budgetService.findById(id);
-        List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        updatesService.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
-        budgetService.deleteById(id);
+        Optional<Budget> budget = budgetService.findByIdAndUser(id, currentUser.getUser());
+        if (budget.isPresent()) {
+            List<Category> categoriesBudget = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
+            updatesService.setBudgetOther(budget.get(), categoriesBudget, currentUser.getUser());
+            budgetService.deleteById(id);
+        } else throw new RuntimeException("Budget not found");
         return "redirect:/budgets/all";
     }
 }

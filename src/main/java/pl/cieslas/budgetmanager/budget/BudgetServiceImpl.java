@@ -34,6 +34,11 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
+    public Optional<Budget> findByIdAndUser(Long id, User user) {
+        return budgetRepository.findByIdAndUser(id, user);
+    }
+
+    @Override
     public Optional<Budget> findByUserAndIdOrderByAmountDesc(User user, Long id) {
         return budgetRepository.findByUserAndIdOrderByAmountDesc(user, id);
     }

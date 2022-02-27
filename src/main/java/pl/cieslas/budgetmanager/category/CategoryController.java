@@ -90,8 +90,11 @@ public class CategoryController {
 
     //    show form for editing category
     @GetMapping("/edit/{id}")
-    public String editCategoryForm(Model model, @PathVariable long id) {
-        model.addAttribute("category", categoryService.findById(id));
+    public String editCategoryForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Category> category = categoryService.findByIdAndUser(id, currentUser.getUser());
+        if (category.isPresent()) {
+            model.addAttribute("category", category.get());
+        } else throw new RuntimeException("Category not found");
         return "categories/categoryEditForm";
     }
 
@@ -103,10 +106,10 @@ public class CategoryController {
         return "redirect:/categories/all";
     }
 
-//    delete category
+    //    delete category
     @GetMapping("/delete/{id}")
     public String deleteCategory(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
-        Optional<Category> category = categoryService.findById(id);
+        Optional<Category> category = categoryService.findByIdAndUser(id, currentUser.getUser());
         if (category.isPresent()) {
             List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(),
                     currentUser.getUser());
