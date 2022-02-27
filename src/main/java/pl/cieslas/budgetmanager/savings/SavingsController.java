@@ -4,8 +4,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import pl.cieslas.budgetmanager.savings.Savings;
-import pl.cieslas.budgetmanager.savings.SavingsService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.util.List;
@@ -29,7 +27,6 @@ public class SavingsController {
     public String addSavingForm(Model model) {
         model.addAttribute("savings", new Savings());
         return "savings/savingsAddForm";
-
     }
 
     @PostMapping("/add")

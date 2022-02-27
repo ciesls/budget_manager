@@ -20,6 +20,10 @@ public class IncomeController {
     private final IncomeService incomeService;
     private final AccountService accountService;
 
+    public IncomeController(IncomeService incomeService, AccountService accountService) {
+        this.incomeService = incomeService;
+        this.accountService = accountService;
+    }
 
     @ModelAttribute("accounts")
     public List<Account> accounts(@AuthenticationPrincipal CurrentUser currentUser) {
@@ -29,11 +33,6 @@ public class IncomeController {
     @ModelAttribute("incomes")
     public List<Income> incomes(@AuthenticationPrincipal CurrentUser currentUser) {
         return incomeService.findAllByUser(currentUser.getUser());
-    }
-
-    public IncomeController(IncomeService incomeService, AccountService accountService) {
-        this.incomeService = incomeService;
-        this.accountService = accountService;
     }
 
     @GetMapping("/add")
@@ -54,7 +53,6 @@ public class IncomeController {
             account.get().setBalance(currentBalance.add(income.getAmount()));
             accountService.save(account.get());
         }
-
         return "redirect:/dashboard";
     }
 
@@ -73,6 +71,7 @@ public class IncomeController {
             account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
             accountService.save(account.get());
         }
+
         incomeService.deleteByIdAndUser(id, currentUser.getUser());
 
         return "redirect:/income/all";

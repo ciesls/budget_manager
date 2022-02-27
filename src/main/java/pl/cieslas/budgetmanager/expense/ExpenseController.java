@@ -63,7 +63,7 @@ public class ExpenseController {
         Optional<Expense> expense = expenseService.getPerUser(id, currentUser.getUser());
         if (expense.isPresent()) {
             model.addAttribute("expense", expense.get());
-        }
+        } else throw new RuntimeException("Expense not found");
         return "expense/userExpensesDetails";
     }
 
@@ -130,7 +130,6 @@ public class ExpenseController {
     public String deleteExpense(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
         Optional<Expense> expense = expenseService.findById(id);
         expenseService.deleteByIdAndUser(id, currentUser.getUser());
-
         Long accountId = expense.get().getAccount().getId();
         Optional<Account> account = accountService.findById(accountId);
         if (account.isPresent()) {

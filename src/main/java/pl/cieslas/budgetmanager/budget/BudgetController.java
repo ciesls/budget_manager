@@ -57,7 +57,6 @@ public class BudgetController {
     public String getUserBudgets(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         model.addAttribute("budgets", budgetService.findAllByUser(currentUser.getUser()));
         return "budget/userBudgets";
-
     }
 
     //    show form for editing budget
@@ -75,12 +74,6 @@ public class BudgetController {
         return "redirect:/budgets/all";
     }
 
-    @GetMapping("/delete")
-    public String deleteBudget(@AuthenticationPrincipal CurrentUser currentUser) {
-        budgetService.deleteById(2L);
-        return budgetService.findAllByUser(currentUser.getUser()).toString();
-    }
-
     @GetMapping("/details/{id}")
     public String getBudgeDetails(@PathVariable long id,
                                   @AuthenticationPrincipal CurrentUser currentUser, Model model) {
@@ -90,6 +83,7 @@ public class BudgetController {
 //        move to DTO
         budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
 //      get categories from budget
+
         List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
         model.addAttribute("categoriesBudget", budgetCategories);
 //      get sum of expenses in budget in current month

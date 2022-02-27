@@ -26,7 +26,6 @@ public class AccountController {
         return accountService.findAllByUser(currentUser.getUser());
     }
 
-
     @GetMapping("/add")
     public String addAccountForm(Model model) {
         model.addAttribute("account", new Account());
@@ -39,7 +38,6 @@ public class AccountController {
         account.setUser(currentUser.getUser());
         account.setCreatedOn(LocalDate.now());
         accountService.save(account);
-
         return "redirect:/dashboard";
     }
 
