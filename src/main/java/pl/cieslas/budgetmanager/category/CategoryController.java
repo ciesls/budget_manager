@@ -107,10 +107,12 @@ public class CategoryController {
     @GetMapping("/delete/{id}")
     public String deleteCategory(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
         Optional<Category> category = categoryService.findById(id);
-        List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser());
-        updates.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
-        categoryService.deleteById(id);
-
+        if (category.isPresent()) {
+            List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(),
+                    currentUser.getUser());
+            updates.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
+            categoryService.deleteById(id);
+        } else throw new RuntimeException("Category not found");
         return "redirect:/categories/all";
     }
 

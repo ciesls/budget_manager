@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/savings")
@@ -44,6 +45,22 @@ public class SavingsController {
     @GetMapping("/delete/{id}")
     public String deleteSaving(@PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
         savingsService.deleteByIdAndUser(id, currentUser.getUser());
+        return "redirect:/savings/all";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editSavingForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Savings> saving = savingsService.findByIdAndUser(id, currentUser.getUser());
+        if (saving.isPresent()) {
+            model.addAttribute("savings", saving.get());
+        } else throw new RuntimeException("Saving not found");
+        return "savings/savingsEditForm";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editSaving(Savings savings, @AuthenticationPrincipal CurrentUser currentUser) {
+        savings.setUser(currentUser.getUser());
+        savingsService.save(savings);
         return "redirect:/savings/all";
     }
 

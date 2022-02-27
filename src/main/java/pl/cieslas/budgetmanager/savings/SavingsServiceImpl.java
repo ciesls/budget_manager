@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.cieslas.budgetmanager.user.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,4 +45,6 @@ public class SavingsServiceImpl implements SavingsService{
         savingsRepository.deleteById(id);
 
     }
+
+
 }

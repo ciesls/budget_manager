@@ -2,6 +2,7 @@ package pl.cieslas.budgetmanager.savings;
 
 import pl.cieslas.budgetmanager.user.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ public interface SavingsService {
     Savings save(Savings savings);
 
     void deleteByIdAndUser(Long id, User user);
+
 
 
 }

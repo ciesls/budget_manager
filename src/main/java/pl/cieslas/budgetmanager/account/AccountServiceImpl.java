@@ -57,10 +57,14 @@ public class AccountServiceImpl implements AccountService {
     public void transfer(BigDecimal amount, long accountID1, long accountID2, User user) {
         Optional<Account> acc1 = accountRepository.findByIdAndUser(accountID1, user);
         Optional<Account> acc2 = accountRepository.findByIdAndUser(accountID2, user);
-        BigDecimal acc1Balance = acc1.get().getBalance();
-        BigDecimal acc2Balance = acc2.get().getBalance();
-        acc2.get().setBalance(acc2Balance.add(amount));
-        acc1.get().setBalance(acc1Balance.subtract(amount));
+        if (acc1.isPresent()) {
+            BigDecimal acc1Balance = acc1.get().getBalance();
+            acc1.get().setBalance(acc1Balance.subtract(amount));
+        } else throw new RuntimeException("Account not found");
+        if (acc2.isPresent()) {
+            BigDecimal acc2Balance = acc2.get().getBalance();
+            acc2.get().setBalance(acc2Balance.add(amount));
+        } else throw new RuntimeException("Accpunt not found");
         accountRepository.save(acc1.get());
         accountRepository.save(acc2.get());
     }
