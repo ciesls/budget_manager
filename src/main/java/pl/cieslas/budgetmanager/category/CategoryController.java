@@ -76,15 +76,15 @@ public class CategoryController {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
         Optional<Category> category = categoryService.findById(id);
-
-        model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
-                (category.get(), currentUser.getUser()));
-        model.addAttribute("categorySum", expenseService.sumOfExpenses
-                (expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser())));
-        model.addAttribute("monthSum", expenseService.sumOfExpenses
-                (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
-                category.get(), currentUser.getUser(), monthStart, now)));
-
+        if (category.isPresent()) {
+            model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
+                    (category.get(), currentUser.getUser()));
+            model.addAttribute("categorySum", expenseService.sumOfExpenses
+                    (expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser())));
+            model.addAttribute("monthSum", expenseService.sumOfExpenses
+                    (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
+                            category.get(), currentUser.getUser(), monthStart, now)));
+        } else throw new RuntimeException("Category not found");
         return "expense/userExpensesCategory";
     }
 
