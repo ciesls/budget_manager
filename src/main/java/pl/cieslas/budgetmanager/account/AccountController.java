@@ -47,8 +47,11 @@ public class AccountController {
     }
 
     @GetMapping("/edit/{id}")
-    public String accountEditForm(Model model, @PathVariable long id) {
-        model.addAttribute("account", accountService.findById(id));
+    public String accountEditForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Account> account = accountService.findByIdAndUser(id, currentUser.getUser());
+        if (account.isPresent()) {
+        model.addAttribute("account", account.get());
+        } else throw new RuntimeException("Account not found");
         return "account/accountEditForm";
     }
 

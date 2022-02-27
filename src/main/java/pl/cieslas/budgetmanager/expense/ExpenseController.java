@@ -90,7 +90,7 @@ public class ExpenseController {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.subtract(expense.getAmount()));
             accountService.save(account.get());
-        }
+        } else throw new RuntimeException("Acount not found");
         return "redirect:/expenses/all";
     }
 
