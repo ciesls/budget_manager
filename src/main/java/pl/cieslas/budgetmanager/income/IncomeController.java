@@ -64,22 +64,26 @@ public class IncomeController {
     @GetMapping("/delete/{id}")
     public String deleteIncome(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
         Optional<Income> income = incomeService.findByIdAndUser(id, currentUser.getUser());
-        Long accountId = income.get().getAccount().getId();
-        Optional<Account> account = accountService.findById(accountId);
-        if (account.isPresent()) {
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
-            accountService.save(account.get());
-        }
-
+        if (income.isPresent()) {
+            Long accountId = income.get().getAccount().getId();
+            Optional<Account> account = accountService.findById(accountId);
+            if (account.isPresent()) {
+                BigDecimal currentBalance = account.get().getBalance();
+                account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
+                accountService.save(account.get());
+            }
+        } else throw new RuntimeException("Some error");
         incomeService.deleteByIdAndUser(id, currentUser.getUser());
 
         return "redirect:/income/all";
     }
 
     @GetMapping("/edit/{id}")
-    public String incomeEditForm(Model model, @PathVariable long id) {
-        model.addAttribute("income", incomeService.findById(id));
+    public String incomeEditForm(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Income> income = incomeService.findByIdAndUser(id, currentUser.getUser());
+        if (income.isPresent()) {
+            model.addAttribute("income", income.get());
+        } else throw new RuntimeException("Income not found");
         return "income/incomeEditForm";
     }
 
@@ -87,21 +91,22 @@ public class IncomeController {
     public String editIncome(Income income, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
 //      details of original account
         Optional<Income> orgIncome = incomeService.findById(id);
-        BigDecimal orgAmount = orgIncome.get().getAmount();
-        Account orgAccount = orgIncome.get().getAccount();
-        BigDecimal orgAccBalance = orgAccount.getBalance();
+        Optional<Income> updatedIncome = incomeService.findById(id);
+        if (orgIncome.isPresent() && updatedIncome.isPresent()) {
+            BigDecimal orgAmount = orgIncome.get().getAmount();
+            Account orgAccount = orgIncome.get().getAccount();
+            BigDecimal orgAccBalance = orgAccount.getBalance();
 
-        income.setUser(currentUser.getUser());
-        incomeService.save(income);
+            income.setUser(currentUser.getUser());
+            incomeService.save(income);
 
 //      details of updated account
-        Optional<Income> updatedIncome = incomeService.findById(id);
-        BigDecimal updatedAmount = updatedIncome.get().getAmount();
-        Account updatedAccount = updatedIncome.get().getAccount();
-        BigDecimal updatedAccBalance = updatedAccount.getBalance();
+            BigDecimal updatedAmount = updatedIncome.get().getAmount();
+            Account updatedAccount = updatedIncome.get().getAccount();
+            BigDecimal updatedAccBalance = updatedAccount.getBalance();
 
-        accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
-
+            accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
+        } else throw new RuntimeException("Income not found");
         return "redirect:/income/all";
     }
 }

@@ -108,21 +108,22 @@ public class ExpenseController {
                               @PathVariable long id) {
         // org expense details
         Optional<Expense> orgExpense = expenseService.findById(id);
-        Account orgAccount = orgExpense.get().getAccount();
-        BigDecimal orgAmount = orgExpense.get().getAmount();
-        BigDecimal orgAccBalance = orgAccount.getBalance();
-
-        expense.setUser(currentUser.getUser());
-        expenseService.saveExpense(expense);
-
-        //        updated expense details
         Optional<Expense> updatedExpense = expenseService.findById(id);
-        BigDecimal updatedAmount = updatedExpense.get().getAmount();
-        Account updatedAccount = updatedExpense.get().getAccount();
-        BigDecimal updatedAccBalance = updatedAccount.getBalance();
+        if (orgExpense.isPresent() && updatedExpense.isPresent()) {
+            Account orgAccount = orgExpense.get().getAccount();
+            BigDecimal orgAmount = orgExpense.get().getAmount();
+            BigDecimal orgAccBalance = orgAccount.getBalance();
 
-        accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
+            expense.setUser(currentUser.getUser());
+            expenseService.saveExpense(expense);
 
+            //        updated expense details
+            BigDecimal updatedAmount = updatedExpense.get().getAmount();
+            Account updatedAccount = updatedExpense.get().getAccount();
+            BigDecimal updatedAccBalance = updatedAccount.getBalance();
+
+            accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
+        } else throw new RuntimeException("Expense not found");
         return "redirect:/expenses/all";
     }
 
