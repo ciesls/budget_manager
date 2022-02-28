@@ -47,7 +47,7 @@ public class IncomeController {
         income.setCreatedOn(LocalDate.now());
         incomeService.save(income);
         Long accountId = income.getAccount().getId();
-        Optional<Account> account = accountService.findById(accountId);
+        Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
         if (account.isPresent()) {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.add(income.getAmount()));
@@ -66,7 +66,7 @@ public class IncomeController {
         Optional<Income> income = incomeService.findByIdAndUser(id, currentUser.getUser());
         if (income.isPresent()) {
             Long accountId = income.get().getAccount().getId();
-            Optional<Account> account = accountService.findById(accountId);
+            Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
             if (account.isPresent()) {
                 BigDecimal currentBalance = account.get().getBalance();
                 account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
@@ -90,8 +90,8 @@ public class IncomeController {
     @PostMapping("/edit/{id}")
     public String editIncome(Income income, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
 //      details of original account
-        Optional<Income> orgIncome = incomeService.findById(id);
-        Optional<Income> updatedIncome = incomeService.findById(id);
+        Optional<Income> orgIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
+        Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
         if (orgIncome.isPresent() && updatedIncome.isPresent()) {
             BigDecimal orgAmount = orgIncome.get().getAmount();
             Account orgAccount = orgIncome.get().getAccount();

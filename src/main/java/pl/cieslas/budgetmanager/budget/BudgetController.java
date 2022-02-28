@@ -99,7 +99,7 @@ public class BudgetController {
     @GetMapping("/budgetCategories/{id}")
     public String getAllCategoriesFromBudget(@AuthenticationPrincipal CurrentUser currentUser,
                                              @PathVariable long id, Model model) {
-        Optional<Budget> budget = budgetService.findById(id);
+        Optional<Budget> budget = budgetService.findByIdAndUser(id, currentUser.getUser());
         if (budget.isPresent()) {
             List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
             model.addAttribute("categoriesBudget", budgetCategories);

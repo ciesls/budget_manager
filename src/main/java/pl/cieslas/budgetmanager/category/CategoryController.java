@@ -75,7 +75,7 @@ public class CategoryController {
                                              @PathVariable long id) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
-        Optional<Category> category = categoryService.findById(id);
+        Optional<Category> category = categoryService.findByIdAndUser(id, currentUser.getUser());
         if (category.isPresent()) {
             model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
                     (category.get(), currentUser.getUser()));

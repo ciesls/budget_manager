@@ -85,7 +85,7 @@ public class ExpenseController {
         expenseService.saveExpense(expense);
 
         Long accountId = expense.getAccount().getId();
-        Optional<Account> account = accountService.findById(accountId);
+        Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
         if (account.isPresent()) {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.subtract(expense.getAmount()));
@@ -109,8 +109,8 @@ public class ExpenseController {
     public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser,
                               @PathVariable long id) {
         // org expense details
-        Optional<Expense> orgExpense = expenseService.findById(id);
-        Optional<Expense> updatedExpense = expenseService.findById(id);
+        Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
+        Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
         if (orgExpense.isPresent() && updatedExpense.isPresent()) {
             Account orgAccount = orgExpense.get().getAccount();
             BigDecimal orgAmount = orgExpense.get().getAmount();
