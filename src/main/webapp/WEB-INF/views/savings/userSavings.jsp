@@ -36,7 +36,7 @@
                                 <th>Current value</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
-                                <th>Details</th>
+                                <th>Add value</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -47,7 +47,7 @@
                                     <td>${saving.value}</td>
                                     <td><a href="/savings/edit/${saving.id}">Edit</a></td>
                                     <td><a href="/savings/delete/${saving.id}">Delete</a></td>
-                                    <td><a href="/savings/details/${saving.id}">Details</a></td>
+                                    <td><a href="/savings/increase/${saving.id}">Increase value</a></td>
                                 </tr>
                             </c:forEach>
                             </tbody>

@@ -5,12 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.budget.Budget;
-import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.budget.BudgetService;
+import pl.cieslas.budgetmanager.dto.CategoryExpensesDTOService;
+import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
 import pl.cieslas.budgetmanager.updates.Updates;
 import pl.cieslas.budgetmanager.user.CurrentUser;
-import pl.cieslas.budgetmanager.user.UserService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,21 +25,23 @@ public class CategoryController {
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
     private final Updates updates;
+    private final CategoryExpensesDTOService categoryExpensesDTOService;
 
 
-    public CategoryController(UserService userService, CategoryService categoryService, BudgetService budgetService,
-                              ExpenseService expenseService, Updates updates) {
+    public CategoryController(CategoryService categoryService, BudgetService budgetService,
+                              ExpenseService expenseService, Updates updates,
+                              CategoryExpensesDTOService categoryExpensesDTOService) {
 
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.expenseService = expenseService;
         this.updates = updates;
+        this.categoryExpensesDTOService = categoryExpensesDTOService;
     }
 
     @ModelAttribute("localDateTimeFormat")
     public DateTimeFormatter formatDate() {
-        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-        return localDateTimeFormat;
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
     @ModelAttribute("budgets")
@@ -75,18 +77,11 @@ public class CategoryController {
                                              @PathVariable long id) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
-        Optional<Category> category = categoryService.findByIdAndUser(id, currentUser.getUser());
-        if (category.isPresent()) {
-            model.addAttribute("expensesCategories", expenseService.findAllByCategoryAndUser
-                    (category.get(), currentUser.getUser()));
-            model.addAttribute("categorySum", expenseService.sumOfExpenses
-                    (expenseService.findAllByCategoryAndUser(category.get(), currentUser.getUser())));
-            model.addAttribute("monthSum", expenseService.sumOfExpenses
-                    (expenseService.findAllByCategoryAndUserAndCreatedOnBetween(
-                            category.get(), currentUser.getUser(), monthStart, now)));
-        } else throw new RuntimeException("Category not found");
+        model.addAttribute("categoryExpenses", categoryExpensesDTOService.getCategoryExpensesDTO(
+                currentUser.getUser(), monthStart, now, id));
         return "expense/userExpensesCategory";
     }
+//    }
 
     //    show form for editing category
     @GetMapping("/edit/{id}")

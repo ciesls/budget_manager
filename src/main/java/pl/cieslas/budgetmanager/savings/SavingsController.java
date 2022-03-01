@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,4 +65,26 @@ public class SavingsController {
         return "redirect:/savings/all";
     }
 
+    @GetMapping("/increase/{id}")
+    public String increaseSavingFrom(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
+        Optional<Savings> saving = savingsService.findByIdAndUser(id, currentUser.getUser());
+        if (saving.isPresent()) {
+            model.addAttribute("savings", saving.get());
+        } else throw new RuntimeException("Saving not found");
+        return "savings/savingsIncreaseForm";
+    }
+
+    @PostMapping("/increase/{id}")
+    public String increaseValue(@RequestParam BigDecimal newValue, @PathVariable long id,
+                                @AuthenticationPrincipal CurrentUser currentUser) {
+
+        Optional<Savings> saving = savingsService.findByIdAndUser(id, currentUser.getUser());
+        if (saving.isPresent()) {
+            saving.get().setPreviousValue(saving.get().getValue());
+            saving.get().setValue(newValue);
+            savingsService.save(saving.get());
+        } else throw new RuntimeException("Savings not found");
+
+        return "redirect:/savings/all";
+    }
 }

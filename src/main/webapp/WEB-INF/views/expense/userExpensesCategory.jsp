@@ -49,7 +49,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="expense" items="${expensesCategories}">
+                            <c:forEach var="expense" items="${categoryExpenses.expensesCategories}">
                                 <tr>
                                     <td>${expense.name}</td>
                                     <td>${expense.amount}</td>
@@ -69,10 +69,10 @@
         </main>
 
         Total expenses
-        ${categorySum}
+        ${categoryExpenses.categorySum}
         <br>
         Spent in current month
-        ${monthSum}
+        ${categoryExpenses.monthSum}
 
         <jsp:include page="../staticElements/footer.jsp"/>
     </div>
