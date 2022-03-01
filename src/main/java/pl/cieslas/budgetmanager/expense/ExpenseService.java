@@ -1,6 +1,7 @@
 package pl.cieslas.budgetmanager.expense;
 
 import pl.cieslas.budgetmanager.category.Category;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -37,5 +38,11 @@ public interface ExpenseService {
     BigDecimal sumOfExpenses(List<Expense> expenses);
 
     Map<YearMonth, BigDecimal> groupExpensesByMonth(List<Expense> expenses);
+
+    void updateAccountAfterExpenseDelete(User user, Expense expense);
+
+    void updateAccountAfterExpenseAdd(User user, Expense expense);
+
+
 
 }

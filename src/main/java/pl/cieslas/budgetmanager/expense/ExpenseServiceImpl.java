@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.cieslas.budgetmanager.account.Account;
+import pl.cieslas.budgetmanager.account.AccountService;
 import pl.cieslas.budgetmanager.category.Category;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -21,10 +24,12 @@ import java.util.stream.Collectors;
 public class ExpenseServiceImpl implements ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final AccountService accountService;
 
     @Autowired
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository) {
+    public ExpenseServiceImpl(ExpenseRepository expenseRepository, AccountService accountService) {
         this.expenseRepository = expenseRepository;
+        this.accountService = accountService;
     }
 
 
@@ -98,5 +103,25 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     }
 
+    @Override
+    public void updateAccountAfterExpenseDelete(User user, Expense expense) {
+        Long accountId = expense.getAccount().getId();
+        Optional<Account> account = accountService.findByIdAndUser(accountId, user);
+        if (account.isPresent()) {
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(expense.getAmount()));
+            accountService.save(account.get());
+        } else throw new RuntimeException("Not found");
+    }
 
+    @Override
+    public void updateAccountAfterExpenseAdd(User user, Expense expense) {
+        Long accountId = expense.getAccount().getId();
+        Optional<Account> account = accountService.findByIdAndUser(accountId, user);
+        if (account.isPresent()) {
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.subtract(expense.getAmount()));
+            accountService.save(account.get());
+        } else throw new RuntimeException("Account not found");
+    }
 }

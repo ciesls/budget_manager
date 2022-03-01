@@ -89,17 +89,17 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
     }
 
     @Override
-    public void updateAccountWithIncome(Income income, CurrentUser currentUser, long id) {
-        Optional<Income> orgIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
+    public void updateAccountWithIncome(Income income, User user, long id) {
+        Optional<Income> orgIncome = incomeService.findByIdAndUser(id, user);
         if (orgIncome.isPresent()) {
             Account orgAccount = orgIncome.get().getAccount();
             BigDecimal orgAmount = orgIncome.get().getAmount();
             BigDecimal orgAccBalance = orgAccount.getBalance();
 
-            income.setUser(currentUser.getUser());
+            income.setUser(user);
             incomeService.save(income);
 
-            Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
+            Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, user);
 //      details of updated account
             if (updatedIncome.isPresent()) {
                 BigDecimal updatedAmount = updatedIncome.get().getAmount();
@@ -113,17 +113,17 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
     }
 
     @Override
-    public void updateAccountWithExpense(Expense expense, CurrentUser currentUser, long id) {
-        Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
+    public void updateAccountWithExpense(Expense expense, User user, long id) {
+        Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, user);
         if (orgExpense.isPresent()) {
             Account orgAccount = orgExpense.get().getAccount();
             BigDecimal orgAmount = orgExpense.get().getAmount();
             BigDecimal orgAccBalance = orgAccount.getBalance();
 
-            expense.setUser(currentUser.getUser());
+            expense.setUser(user);
             expenseService.saveExpense(expense);
 
-            Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
+            Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, user);
             //        updated expense details
             if (updatedExpense.isPresent()) {
                 BigDecimal updatedAmount = updatedExpense.get().getAmount();

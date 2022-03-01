@@ -13,7 +13,6 @@ import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -82,14 +81,7 @@ public class ExpenseController {
         expense.setUser(currentUser.getUser());
         expense.setCreatedOn(LocalDate.now());
         expenseService.saveExpense(expense);
-
-        Long accountId = expense.getAccount().getId();
-        Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-        if (account.isPresent()) {
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.subtract(expense.getAmount()));
-            accountService.save(account.get());
-        } else throw new RuntimeException("Account not found");
+        expenseService.updateAccountAfterExpenseAdd(currentUser.getUser(), expense);
         return "redirect:/expenses/all";
     }
 
@@ -107,9 +99,8 @@ public class ExpenseController {
     @PostMapping("/edit/{id}")
     public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser,
                               @PathVariable long id) {
-        // org expense details
 
-        updatesService.updateAccountWithExpense(expense, currentUser, id);
+        updatesService.updateAccountWithExpense(expense, currentUser.getUser(), id);
         return "redirect:/expenses/all";
     }
 
@@ -118,15 +109,10 @@ public class ExpenseController {
         Optional<Expense> expense = expenseService.findByIdAndUser(id, currentUser.getUser());
         if (expense.isPresent()) {
             expenseService.deleteByIdAndUser(id, currentUser.getUser());
-            Long accountId = expense.get().getAccount().getId();
-            Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-            if (account.isPresent()) {
-                BigDecimal currentBalance = account.get().getBalance();
-                account.get().setBalance(currentBalance.add(expense.get().getAmount()));
-                accountService.save(account.get());
-            } else throw new RuntimeException("Not found");
+            expenseService.updateAccountAfterExpenseDelete(currentUser.getUser(), expense.get());
         } else throw new RuntimeException("Expense not found");
         return "redirect:/expenses/all";
     }
+
 
 }

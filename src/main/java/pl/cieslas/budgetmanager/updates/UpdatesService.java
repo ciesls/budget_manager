@@ -15,9 +15,9 @@ public interface UpdatesService {
 
     void setCategoryOther(Category category, List<Expense> expenses, User user);
 
-    void updateAccountWithIncome(Income income, CurrentUser currentUser, long id);
+    void updateAccountWithIncome(Income income, User user, long id);
 
-    void updateAccountWithExpense(Expense expense, CurrentUser currentUser, long id);
+    void updateAccountWithExpense(Expense expense, User user, long id);
 
 
 

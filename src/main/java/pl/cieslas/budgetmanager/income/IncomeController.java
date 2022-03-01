@@ -93,7 +93,7 @@ public class IncomeController {
     @PostMapping("/edit/{id}")
     public String editIncome(Income income, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
 
-        updatesService.updateAccountWithIncome(income, currentUser, id);
+        updatesService.updateAccountWithIncome(income, currentUser.getUser(), id);
 
         return "redirect:/income/all";
     }
