@@ -80,8 +80,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public BigDecimal sumOfExpenses(List<Expense> expenses) {
-        BigDecimal sum = expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sum;
+        return expenses.stream().map(Expense::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override

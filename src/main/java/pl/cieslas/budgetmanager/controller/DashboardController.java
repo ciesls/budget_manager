@@ -20,7 +20,6 @@ import pl.cieslas.budgetmanager.user.CurrentUser;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class DashboardController {
 
     @ModelAttribute("localDateTimeFormat")
     public DateTimeFormatter formatDate() {
-        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         return localDateTimeFormat;
     }
 
@@ -55,18 +54,16 @@ public class DashboardController {
     }
 
     @ModelAttribute("currentMonthExpenses")
-    public List<Expense> currentMonthExpenses(LocalDate startTime, LocalDate now,
-                                              @AuthenticationPrincipal CurrentUser currentUser) {
-        startTime = LocalDate.now().withDayOfMonth(1);
-        now = LocalDate.now();
+    public List<Expense> currentMonthExpenses(@AuthenticationPrincipal CurrentUser currentUser) {
+        LocalDate startTime = LocalDate.now().withDayOfMonth(1);
+        LocalDate now = LocalDate.now();
         return expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
     }
 
     @ModelAttribute("currentMonthExpensesSum")
-    public BigDecimal currentMonthExpensesSum(LocalDate startTime, LocalDate now,
-                                              @AuthenticationPrincipal CurrentUser currentUser) {
-        startTime = LocalDate.now().withDayOfMonth(1);
-        now = LocalDate.now();
+    public BigDecimal currentMonthExpensesSum(@AuthenticationPrincipal CurrentUser currentUser) {
+        LocalDate startTime = LocalDate.now().withDayOfMonth(1);
+        LocalDate now = LocalDate.now();
         List<Expense> expenses = expenseService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
         return expenseService.sumOfExpenses(expenses);
     }
@@ -111,10 +108,9 @@ public class DashboardController {
     }
 
     @ModelAttribute("currentMonthIncome")
-    public BigDecimal currentMonthIncomeSum(@AuthenticationPrincipal CurrentUser currentUser,
-                                            LocalDate startTime, LocalDate now) {
-        startTime = LocalDate.now().withDayOfMonth(1);
-        now = LocalDate.now();
+    public BigDecimal currentMonthIncomeSum(@AuthenticationPrincipal CurrentUser currentUser) {
+        LocalDate startTime = LocalDate.now().withDayOfMonth(1);
+        LocalDate now = LocalDate.now();
         List<Income> incomes = incomeService.findAllByUserAndCreatedOnBetween(currentUser.getUser(), startTime, now);
         return incomeService.sumOfIncome(incomes);
     }

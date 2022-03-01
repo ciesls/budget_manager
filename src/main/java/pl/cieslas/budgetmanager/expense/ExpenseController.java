@@ -6,11 +6,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.account.Account;
-import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.account.AccountService;
+import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
+import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
-import pl.cieslas.budgetmanager.user.UserService;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -24,16 +24,16 @@ import java.util.Optional;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
-    private final UserService userService;
     private final CategoryService categoryService;
     private final AccountService accountService;
+    private final UpdatesService updatesService;
 
-    public ExpenseController(ExpenseService expenseService, UserService userService,
-                             CategoryService categoryService, AccountService accountService) {
+    public ExpenseController(ExpenseService expenseService, CategoryService categoryService,
+                             AccountService accountService, UpdatesService updatesService) {
         this.expenseService = expenseService;
-        this.userService = userService;
         this.categoryService = categoryService;
         this.accountService = accountService;
+        this.updatesService = updatesService;
     }
 
     @ModelAttribute("categories")
@@ -89,7 +89,7 @@ public class ExpenseController {
             BigDecimal currentBalance = account.get().getBalance();
             account.get().setBalance(currentBalance.subtract(expense.getAmount()));
             accountService.save(account.get());
-        } else throw new RuntimeException("Acount not found");
+        } else throw new RuntimeException("Account not found");
         return "redirect:/expenses/all";
     }
 
@@ -109,22 +109,7 @@ public class ExpenseController {
                               @PathVariable long id) {
         // org expense details
 
-        Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
-            Account orgAccount = orgExpense.get().getAccount();
-            BigDecimal orgAmount = orgExpense.get().getAmount();
-            BigDecimal orgAccBalance = orgAccount.getBalance();
-
-            expense.setUser(currentUser.getUser());
-            expenseService.saveExpense(expense);
-
-            Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
-            //        updated expense details
-            BigDecimal updatedAmount = updatedExpense.get().getAmount();
-            Account updatedAccount = updatedExpense.get().getAccount();
-            BigDecimal updatedAccBalance = updatedAccount.getBalance();
-
-            accountService.updateAccountWithAmountExpense(orgAccount, orgAmount, orgAccBalance, updatedAmount,
-                    updatedAccount, updatedAccBalance);
+        updatesService.updateAccountWithExpense(expense, currentUser, id);
         return "redirect:/expenses/all";
     }
 
@@ -135,9 +120,11 @@ public class ExpenseController {
             expenseService.deleteByIdAndUser(id, currentUser.getUser());
             Long accountId = expense.get().getAccount().getId();
             Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.add(expense.get().getAmount()));
-            accountService.save(account.get());
+            if (account.isPresent()) {
+                BigDecimal currentBalance = account.get().getBalance();
+                account.get().setBalance(currentBalance.add(expense.get().getAmount()));
+                accountService.save(account.get());
+            } else throw new RuntimeException("Not found");
         } else throw new RuntimeException("Expense not found");
         return "redirect:/expenses/all";
     }

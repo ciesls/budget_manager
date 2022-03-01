@@ -42,7 +42,7 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public String getAlluserAccounts() {
+    public String getAllUserAccounts() {
         return "account/userAccounts";
     }
 
@@ -63,7 +63,7 @@ public class AccountController {
     }
 
     @GetMapping("/transfer")
-    public String transferForm(Model model) {
+    public String transferForm() {
         return "account/accountTransferForm";
     }
 

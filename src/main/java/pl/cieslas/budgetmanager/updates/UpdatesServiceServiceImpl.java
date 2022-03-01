@@ -91,23 +91,51 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
     @Override
     public void updateAccountWithIncome(Income income, CurrentUser currentUser, long id) {
         Optional<Income> orgIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
+        if (orgIncome.isPresent()) {
+            Account orgAccount = orgIncome.get().getAccount();
+            BigDecimal orgAmount = orgIncome.get().getAmount();
+            BigDecimal orgAccBalance = orgAccount.getBalance();
 
-        Account orgAccount = orgIncome.get().getAccount();
-        BigDecimal orgAmount = orgIncome.get().getAmount();
-        BigDecimal orgAccBalance = orgAccount.getBalance();
+            income.setUser(currentUser.getUser());
+            incomeService.save(income);
 
-        income.setUser(currentUser.getUser());
-        incomeService.save(income);
-
-        Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
+            Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
 //      details of updated account
-        BigDecimal updatedAmount = updatedIncome.get().getAmount();
-        Account updatedAccount = updatedIncome.get().getAccount();
-        BigDecimal updatedAccBalance = updatedAccount.getBalance();
+            if (updatedIncome.isPresent()) {
+                BigDecimal updatedAmount = updatedIncome.get().getAmount();
+                Account updatedAccount = updatedIncome.get().getAccount();
+                BigDecimal updatedAccBalance = updatedAccount.getBalance();
 
-        accountService.updateAccountWithAmountIncome(orgAccount, orgAmount, orgAccBalance, updatedAmount,
-                updatedAccount, updatedAccBalance);
-
+                accountService.updateAccountWithAmountIncome(orgAccount, orgAmount, orgAccBalance, updatedAmount,
+                        updatedAccount, updatedAccBalance);
+            } else throw new RuntimeException("Not found");
+        } else throw new RuntimeException("Not found");
     }
+
+    @Override
+    public void updateAccountWithExpense(Expense expense, CurrentUser currentUser, long id) {
+        Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
+        if (orgExpense.isPresent()) {
+            Account orgAccount = orgExpense.get().getAccount();
+            BigDecimal orgAmount = orgExpense.get().getAmount();
+            BigDecimal orgAccBalance = orgAccount.getBalance();
+
+            expense.setUser(currentUser.getUser());
+            expenseService.saveExpense(expense);
+
+            Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
+            //        updated expense details
+            if (updatedExpense.isPresent()) {
+                BigDecimal updatedAmount = updatedExpense.get().getAmount();
+                Account updatedAccount = updatedExpense.get().getAccount();
+                BigDecimal updatedAccBalance = updatedAccount.getBalance();
+
+                accountService.updateAccountWithAmountExpense(orgAccount, orgAmount, orgAccBalance, updatedAmount,
+                        updatedAccount, updatedAccBalance);
+            } else throw new RuntimeException("Not found");
+        } else throw new RuntimeException("Not found");
+    }
+
+
 }
 
