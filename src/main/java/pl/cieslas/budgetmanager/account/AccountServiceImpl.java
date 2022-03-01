@@ -49,8 +49,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public BigDecimal sumOfAccounts(List<Account> accounts) {
-        BigDecimal sum = accounts.stream().map(Account::getBalance).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sum;
+        return accounts.stream().map(Account::getBalance).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
@@ -64,22 +63,25 @@ public class AccountServiceImpl implements AccountService {
         if (acc2.isPresent()) {
             BigDecimal acc2Balance = acc2.get().getBalance();
             acc2.get().setBalance(acc2Balance.add(amount));
-        } else throw new RuntimeException("Accpunt not found");
+        } else throw new RuntimeException("Account not found");
         accountRepository.save(acc1.get());
         accountRepository.save(acc2.get());
     }
 
+    //    to check!!!
     @Override
-    public void updateAccountWithAmount(Account orgAccount, BigDecimal orgAmount, BigDecimal orgAccBalance,
-                                        BigDecimal updatedAmount, Account updatedAccount, BigDecimal updatedAccBalance) {
+    public void updateAccountWithAmountExpense(Account orgAccount, BigDecimal orgAmount, BigDecimal orgAccBalance,
+                                               BigDecimal updatedAmount, Account updatedAccount,
+                                               BigDecimal updatedAccBalance) {
+
         int result = orgAmount.compareTo(updatedAmount);
 
-        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
+        if ((orgAccount == updatedAccount) && (result == -1)) { //orgAmount is less than updatedAmount -
             BigDecimal delta = updatedAmount.subtract(orgAmount);
             orgAccount.setBalance(orgAccBalance.subtract(delta));
             accountRepository.save(orgAccount);
 
-        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
+        } else if ((orgAccount == updatedAccount) && (result == 1)) {
             BigDecimal delta = orgAmount.subtract(updatedAmount);
             orgAccount.setBalance(orgAccBalance.add(delta));
             accountRepository.save(orgAccount);
@@ -92,5 +94,32 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.save(orgAccount);
         }
 
+    }
+
+    @Override
+    public void updateAccountWithAmountIncome(Account orgAccount, BigDecimal orgAmount, BigDecimal orgAccBalance,
+                                              BigDecimal updatedAmount, Account updatedAccount,
+                                              BigDecimal updatedAccBalance) {
+        int result = orgAmount.compareTo(updatedAmount);
+
+        if ((orgAccount == updatedAccount) && (result == -1)) { //if same acc && updated amt > org amt; updating only orgAccount
+            BigDecimal delta = updatedAmount.subtract(orgAmount);
+            orgAccount.setBalance(orgAccBalance.add(delta));
+            accountRepository.save(orgAccount);
+
+        } else if ((orgAccount == updatedAccount) && (result == 1)) { //if same acc && org amt > updated amt; updating only orgAccount
+            BigDecimal delta = orgAmount.subtract(updatedAmount);
+            orgAccount.setBalance(orgAccBalance.subtract(delta));
+            accountRepository.save(orgAccount);
+
+//            to be finished - how to move amounts between accounts
+        } else if (orgAccount != updatedAccount) { //account change && if updated > org;
+            // subtract from orgAccount full amount, add to new account full amount
+            updatedAccount.setBalance(updatedAccBalance.add(updatedAmount));
+            accountRepository.save(updatedAccount);
+            orgAccount.setBalance(orgAccBalance.subtract(orgAmount));
+            accountRepository.save(orgAccount);
+
+        }
     }
 }

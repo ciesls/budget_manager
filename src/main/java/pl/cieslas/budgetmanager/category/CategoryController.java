@@ -9,7 +9,7 @@ import pl.cieslas.budgetmanager.budget.BudgetService;
 import pl.cieslas.budgetmanager.dto.CategoryExpensesDTOService;
 import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
-import pl.cieslas.budgetmanager.updates.Updates;
+import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.time.LocalDate;
@@ -24,18 +24,18 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
-    private final Updates updates;
+    private final UpdatesService updatesService;
     private final CategoryExpensesDTOService categoryExpensesDTOService;
 
 
     public CategoryController(CategoryService categoryService, BudgetService budgetService,
-                              ExpenseService expenseService, Updates updates,
+                              ExpenseService expenseService, UpdatesService updatesService,
                               CategoryExpensesDTOService categoryExpensesDTOService) {
 
         this.categoryService = categoryService;
         this.budgetService = budgetService;
         this.expenseService = expenseService;
-        this.updates = updates;
+        this.updatesService = updatesService;
         this.categoryExpensesDTOService = categoryExpensesDTOService;
     }
 
@@ -108,7 +108,7 @@ public class CategoryController {
         if (category.isPresent()) {
             List<Expense> categoryExpenses = expenseService.findAllByCategoryAndUser(category.get(),
                     currentUser.getUser());
-            updates.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
+            updatesService.setCategoryOther(category.get(), categoryExpenses, currentUser.getUser());
             categoryService.deleteById(id);
         } else throw new RuntimeException("Category not found");
         return "redirect:/categories/all";

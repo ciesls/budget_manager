@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
 import pl.cieslas.budgetmanager.dto.BudgetDetailsDTOService;
-import pl.cieslas.budgetmanager.updates.Updates;
+import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import javax.validation.Valid;
@@ -24,10 +24,10 @@ public class BudgetController {
 
     private final BudgetService budgetService;
     private final CategoryService categoryService;
-    private final Updates updatesService;
+    private final UpdatesService updatesService;
     private final BudgetDetailsDTOService budgetDetailsDTOService;
 
-    public BudgetController(BudgetService budgetService, CategoryService categoryService, Updates updatesService, BudgetDetailsDTOService budgetDetailsDTOService) {
+    public BudgetController(BudgetService budgetService, CategoryService categoryService, UpdatesService updatesService, BudgetDetailsDTOService budgetDetailsDTOService) {
         this.budgetService = budgetService;
         this.categoryService = categoryService;
         this.updatesService = updatesService;

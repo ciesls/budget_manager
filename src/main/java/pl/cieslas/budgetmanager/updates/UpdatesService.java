@@ -3,13 +3,17 @@ package pl.cieslas.budgetmanager.updates;
 import pl.cieslas.budgetmanager.budget.Budget;
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.expense.Expense;
+import pl.cieslas.budgetmanager.income.Income;
+import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.util.List;
 
-public interface Updates {
+public interface UpdatesService {
 
     void setBudgetOther(Budget budget, List<Category> categories, User user);
 
     void setCategoryOther(Category category, List<Expense> expenses, User user);
+
+    void updateAccountWithIncome(Income income, CurrentUser currentUser, long id);
 }

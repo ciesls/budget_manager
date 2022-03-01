@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.account.Account;
 import pl.cieslas.budgetmanager.account.AccountService;
+import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import java.math.BigDecimal;
@@ -19,10 +20,12 @@ public class IncomeController {
 
     private final IncomeService incomeService;
     private final AccountService accountService;
+    private final UpdatesService updatesService;
 
-    public IncomeController(IncomeService incomeService, AccountService accountService) {
+    public IncomeController(IncomeService incomeService, AccountService accountService, UpdatesService updatesService) {
         this.incomeService = incomeService;
         this.accountService = accountService;
+        this.updatesService = updatesService;
     }
 
     @ModelAttribute("accounts")
@@ -89,24 +92,11 @@ public class IncomeController {
 
     @PostMapping("/edit/{id}")
     public String editIncome(Income income, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
-//      details of original account
-        Optional<Income> orgIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
-        Optional<Income> updatedIncome = incomeService.findByIdAndUser(id, currentUser.getUser());
-        if (orgIncome.isPresent() && updatedIncome.isPresent()) {
-            BigDecimal orgAmount = orgIncome.get().getAmount();
-            Account orgAccount = orgIncome.get().getAccount();
-            BigDecimal orgAccBalance = orgAccount.getBalance();
 
-            income.setUser(currentUser.getUser());
-            incomeService.save(income);
+        updatesService.updateAccountWithIncome(income, currentUser, id);
 
-//      details of updated account
-            BigDecimal updatedAmount = updatedIncome.get().getAmount();
-            Account updatedAccount = updatedIncome.get().getAccount();
-            BigDecimal updatedAccBalance = updatedAccount.getBalance();
-
-            accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
-        } else throw new RuntimeException("Income not found");
         return "redirect:/income/all";
     }
+
+
 }

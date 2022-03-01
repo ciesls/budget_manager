@@ -16,7 +16,7 @@ import java.util.Optional;
 @Transactional
 public class IncomeServiceImpl implements IncomeService {
 
-    private IncomeRepository incomeRepository;
+    private final IncomeRepository incomeRepository;
 
     @Autowired
     public IncomeServiceImpl(IncomeRepository incomeRepository) {
@@ -55,7 +55,6 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public BigDecimal sumOfIncome(List<Income> incomes) {
-        BigDecimal sum = incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return sum;
+        return incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

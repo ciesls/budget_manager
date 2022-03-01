@@ -6,9 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.cieslas.budgetmanager.budget.Budget;
 import pl.cieslas.budgetmanager.budget.BudgetRepository;
-import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
-import pl.cieslas.budgetmanager.updates.Updates;
+import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -24,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ExpenseService expenseService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService, BudgetRepository budgetRepository, Updates updates) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService, BudgetRepository budgetRepository, UpdatesService updatesService) {
         this.categoryRepository = categoryRepository;
         this.expenseService = expenseService;
     }

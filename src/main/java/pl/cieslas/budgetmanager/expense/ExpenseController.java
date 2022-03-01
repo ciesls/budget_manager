@@ -43,8 +43,7 @@ public class ExpenseController {
 
     @ModelAttribute("localDateTimeFormat")
     public DateTimeFormatter formatDate() {
-        DateTimeFormatter localDateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-        return localDateTimeFormat;
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
     @ModelAttribute("accounts")
@@ -109,9 +108,8 @@ public class ExpenseController {
     public String editExpense(Expense expense, @AuthenticationPrincipal CurrentUser currentUser,
                               @PathVariable long id) {
         // org expense details
+
         Optional<Expense> orgExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
-        Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
-        if (orgExpense.isPresent() && updatedExpense.isPresent()) {
             Account orgAccount = orgExpense.get().getAccount();
             BigDecimal orgAmount = orgExpense.get().getAmount();
             BigDecimal orgAccBalance = orgAccount.getBalance();
@@ -119,13 +117,14 @@ public class ExpenseController {
             expense.setUser(currentUser.getUser());
             expenseService.saveExpense(expense);
 
+            Optional<Expense> updatedExpense = expenseService.findByIdAndUser(id, currentUser.getUser());
             //        updated expense details
             BigDecimal updatedAmount = updatedExpense.get().getAmount();
             Account updatedAccount = updatedExpense.get().getAccount();
             BigDecimal updatedAccBalance = updatedAccount.getBalance();
 
-            accountService.updateAccountWithAmount(orgAccount, orgAmount, orgAccBalance, updatedAmount, updatedAccount, updatedAccBalance);
-        } else throw new RuntimeException("Expense not found");
+            accountService.updateAccountWithAmountExpense(orgAccount, orgAmount, orgAccBalance, updatedAmount,
+                    updatedAccount, updatedAccBalance);
         return "redirect:/expenses/all";
     }
 
@@ -136,11 +135,11 @@ public class ExpenseController {
             expenseService.deleteByIdAndUser(id, currentUser.getUser());
             Long accountId = expense.get().getAccount().getId();
             Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-                BigDecimal currentBalance = account.get().getBalance();
-                account.get().setBalance(currentBalance.add(expense.get().getAmount()));
-                accountService.save(account.get());
-            } else throw new RuntimeException("Expense not found");
-            return "redirect:/expenses/all";
-        }
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(expense.get().getAmount()));
+            accountService.save(account.get());
+        } else throw new RuntimeException("Expense not found");
+        return "redirect:/expenses/all";
+    }
 
 }
