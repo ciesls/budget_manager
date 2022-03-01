@@ -5,17 +5,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
+import pl.cieslas.budgetmanager.dto.BudgetDetailsDTOService;
 import pl.cieslas.budgetmanager.updates.Updates;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,11 +25,18 @@ public class BudgetController {
     private final BudgetService budgetService;
     private final CategoryService categoryService;
     private final Updates updatesService;
+    private final BudgetDetailsDTOService budgetDetailsDTOService;
 
-    public BudgetController(BudgetService budgetService, CategoryService categoryService, Updates updatesService) {
+    public BudgetController(BudgetService budgetService, CategoryService categoryService, Updates updatesService, BudgetDetailsDTOService budgetDetailsDTOService) {
         this.budgetService = budgetService;
         this.categoryService = categoryService;
         this.updatesService = updatesService;
+        this.budgetDetailsDTOService = budgetDetailsDTOService;
+    }
+
+    @ModelAttribute("localDateTimeFormat")
+    public DateTimeFormatter formatDate() {
+        return DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
     //  show budget form
@@ -82,16 +88,8 @@ public class BudgetController {
                                   @AuthenticationPrincipal CurrentUser currentUser, Model model) {
         LocalDate monthStart = LocalDate.now().withDayOfMonth(1);
         LocalDate now = LocalDate.now();
-        Optional<Budget> budget = budgetService.findByUserAndIdOrderByAmountDesc(currentUser.getUser(), id);
-//        move to DTO
-        budget.ifPresent(value -> model.addAttribute("budgetDetails", value));
-//      get categories from budget
-        List<Category> budgetCategories = categoryService.findAllByUserAndBudget(currentUser.getUser(), budget.get());
-        model.addAttribute("categoriesBudget", budgetCategories);
-//      get sum of expenses in budget in current month
-        model.addAttribute("budgetSum",
-                budgetService.calculateExpensesInBudgetDates(budgetCategories, currentUser.getUser(), monthStart, now));
-
+        model.addAttribute("budgetDetails", budgetDetailsDTOService.getBudgetDetailsDTO(
+                currentUser.getUser(),monthStart, now, id));
         return "budget/userBudgetsDetails";
     }
 

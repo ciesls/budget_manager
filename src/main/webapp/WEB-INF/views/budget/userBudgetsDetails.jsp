@@ -40,11 +40,11 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>${budgetDetails.name}</td>
-                                    <td>${budgetDetails.amount}</td>
-                                    <td>${budgetSum}</td>
-                                    <td><a href="/budgets/edit/${budgetDetails.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${budgetDetails.id}">Delete</a></td>
+                                    <td>${budgetDetails.budget.name}</td>
+                                    <td>${budgetDetails.budget.amount}</td>
+                                    <td>${budgetDetails.budgetSum}</td>
+                                    <td><a href="/budgets/edit/${budgetDetails.budget.id}">Edit</a></td>
+                                    <td><a href="/budgets/delete/${budgetDetails.budget.id}">Delete</a></td>
                                 </tr>
                             </tbody>
                         </table>
