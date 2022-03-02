@@ -32,20 +32,26 @@
                             <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Planned Amount</th>
-                                <th>Spent this month amount</th>
+                                <th>Description/type</th>
+                                <th>Current value</th>
+                                <th>Change</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
+                                <th>Add value</th>
                             </tr>
                             </thead>
                             <tbody>
+                            <c:forEach var="saving" items="${savingsDetails}">
                                 <tr>
-                                    <td>${budgetDetails.budget.name}</td>
-                                    <td>${budgetDetails.budget.amount}</td>
-                                    <td>${budgetDetails.budgetSum}</td>
-                                    <td><a href="/budgets/edit/${budgetDetails.budget.id}">Edit</a></td>
-                                    <td><a href="/budgets/delete/${budgetDetails.budget.id}">Delete</a></td>
+                                    <td>${saving.key.name}</td>
+                                    <td>${saving.key.description}</td>
+                                    <td>${saving.key.value}</td>
+                                    <td>${saving.value}%</td>
+                                    <td><a href="/savings/edit/${saving.key.id}">Edit</a></td>
+                                    <td><a href="/savings/delete/${saving.key.id}">Delete</a></td>
+                                    <td><a href="/savings/increase/${saving.key.id}">Change value</a></td>
                                 </tr>
+                            </c:forEach>
                             </tbody>
                         </table>
                     </div>

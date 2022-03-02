@@ -30,14 +30,15 @@
 <div id="layoutSidenav">
     <jsp:include page="../staticElements/leftNavBar.jsp"/>
 <div id="layoutSidenav">
-    <%--@elvariable id="account" type="pl.cieslas.budgetmanager.account.Account"--%>
     <form:form method="post"
-               modelAttribute="account">
+               modelAttribute="savings">
             <form:hidden path="id"/>
     <label>Name:</label>
         <form:input path="name" type="text"/><br>
-    <label>Amount:</label>
-        <form:input path="balance" type="number" step="0.01"/>
+        <label>Description:</label>
+        <form:input path="description" type="text"/><br>
+    <label>Starting amount:</label>
+        <form:input path="value" type="number" step="0.01"/>
     <input type="submit" value="Save">
     </form:form>
     <jsp:include page="../staticElements/footer.jsp"/>

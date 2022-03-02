@@ -7,21 +7,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pl.cieslas.budgetmanager.security.CurrentUser;
-import pl.cieslas.budgetmanager.entity.User;
-import pl.cieslas.budgetmanager.security.UserService;
-import pl.cieslas.budgetmanager.utils.UserUtils.UserUtils;
+import pl.cieslas.budgetmanager.user.CurrentUser;
+import pl.cieslas.budgetmanager.user.User;
+import pl.cieslas.budgetmanager.user.UserService;
 
 @Controller
 @RequestMapping("/user/")
 public class UserController {
 
     private final UserService userService;
-    private final UserUtils userUtils;
 
-    public UserController(UserService userService, UserUtils userUtils) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userUtils = userUtils;
     }
 
     //  show registration form
@@ -35,7 +32,7 @@ public class UserController {
     @PostMapping("/register")
     public String createUser(User user) {
         userService.saveUser(user);
-        userUtils.addDefaults(user);
+        userService.addDefaults(user);
         return "redirect:/dashboard";
     }
 

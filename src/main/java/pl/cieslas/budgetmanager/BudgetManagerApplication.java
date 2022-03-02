@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.ConverterRegistry;
 import org.springframework.core.convert.support.DefaultConversionService;
-import pl.cieslas.budgetmanager.converters.BudgetConverter;
-import pl.cieslas.budgetmanager.converters.CategoryConverter;
+import pl.cieslas.budgetmanager.budget.BudgetConverter;
+import pl.cieslas.budgetmanager.category.CategoryConverter;
 
 @SpringBootApplication
 public class BudgetManagerApplication {
