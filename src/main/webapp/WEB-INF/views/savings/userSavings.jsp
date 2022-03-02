@@ -34,20 +34,22 @@
                                 <th>Name</th>
                                 <th>Description/type</th>
                                 <th>Current value</th>
+                                <th>Change</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                                 <th>Add value</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <c:forEach var="saving" items="${allSavings}">
+                            <c:forEach var="saving" items="${savingsDetails}">
                                 <tr>
-                                    <td>${saving.name}</td>
-                                    <td>${saving.description}</td>
-                                    <td>${saving.value}</td>
-                                    <td><a href="/savings/edit/${saving.id}">Edit</a></td>
-                                    <td><a href="/savings/delete/${saving.id}">Delete</a></td>
-                                    <td><a href="/savings/increase/${saving.id}">Increase value</a></td>
+                                    <td>${saving.key.name}</td>
+                                    <td>${saving.key.description}</td>
+                                    <td>${saving.key.value}</td>
+                                    <td>${saving.value}%</td>
+                                    <td><a href="/savings/edit/${saving.key.id}">Edit</a></td>
+                                    <td><a href="/savings/delete/${saving.key.id}">Delete</a></td>
+                                    <td><a href="/savings/increase/${saving.key.id}">Change value</a></td>
                                 </tr>
                             </c:forEach>
                             </tbody>

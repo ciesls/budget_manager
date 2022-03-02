@@ -35,7 +35,7 @@
     <label>New value of investment</label>
     <input type="number" step="0.01" name="newValue">
     <br>
-    <input type="submit" value="Increase value">
+    <input type="submit" value="Change value">
     </form:form>
 
 

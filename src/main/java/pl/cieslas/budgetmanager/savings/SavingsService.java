@@ -4,6 +4,7 @@ import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface SavingsService {
@@ -18,6 +19,9 @@ public interface SavingsService {
 
     void deleteByIdAndUser(Long id, User user);
 
+    void increaseValue(User user, long id, BigDecimal newValue);
+
+    Map<Savings, BigDecimal> getSavingsDetails(List<Savings> savings);
 
 
 }

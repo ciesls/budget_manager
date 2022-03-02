@@ -1,13 +1,10 @@
 package pl.cieslas.budgetmanager.category;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.cieslas.budgetmanager.budget.Budget;
-import pl.cieslas.budgetmanager.budget.BudgetRepository;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
-import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -23,15 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ExpenseService expenseService;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService, BudgetRepository budgetRepository, UpdatesService updatesService) {
-        this.categoryRepository = categoryRepository;
-        this.expenseService = expenseService;
-    }
-
-
-    @Autowired
-    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService,
-                               BudgetRepository budgetRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ExpenseService expenseService) {
         this.categoryRepository = categoryRepository;
         this.expenseService = expenseService;
     }
@@ -85,21 +74,19 @@ public class CategoryServiceImpl implements CategoryService {
         Map<Category, BigDecimal> categorySumMap = new HashMap<>();
 
         categories = categoryRepository.findAllByUser(user);
-        for (int i = 0; i < categories.size(); i++) {
+        for (Category category : categories) {
             BigDecimal categorySum = expenseService.sumOfExpenses(expenseService.
-                    findAllByCategoryAndUserAndCreatedOnBetween(categories.get(i), user, startTime, endTime));
-            categorySumMap.put(categories.get(i), categorySum);
+                    findAllByCategoryAndUserAndCreatedOnBetween(category, user, startTime, endTime));
+            categorySumMap.put(category, categorySum);
         }
 
-        Map<Category, BigDecimal> categorySumMapSorted = categorySumMap.entrySet()
+        return categorySumMap.entrySet()
                 .stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
-
-        return categorySumMapSorted;
     }
 
 

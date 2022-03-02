@@ -34,12 +34,15 @@ public class SavingsController {
     @PostMapping("/add")
     public String addSavings(@AuthenticationPrincipal CurrentUser currentUser, Savings savings) {
         savings.setUser(currentUser.getUser());
+        savings.setPreviousValue(savings.getValue());
         savingsService.save(savings);
         return "redirect:/savings/all";
     }
 
     @GetMapping("/all")
-    public String allUserSavings() {
+    public String allUserSavings(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        List<Savings> savings = savingsService.findAllByUser(currentUser.getUser());
+        model.addAttribute("savingsDetails", savingsService.getSavingsDetails(savings));
         return "savings/userSavings";
     }
 
@@ -60,6 +63,7 @@ public class SavingsController {
 
     @PostMapping("/edit/{id}")
     public String editSaving(Savings savings, @AuthenticationPrincipal CurrentUser currentUser) {
+        savings.setPreviousValue(savings.getValue());
         savings.setUser(currentUser.getUser());
         savingsService.save(savings);
         return "redirect:/savings/all";
@@ -71,20 +75,13 @@ public class SavingsController {
         if (saving.isPresent()) {
             model.addAttribute("savings", saving.get());
         } else throw new RuntimeException("Saving not found");
-        return "savings/savingsIncreaseForm";
+        return "savings/savingsChangeValueForm";
     }
 
     @PostMapping("/increase/{id}")
     public String increaseValue(@RequestParam BigDecimal newValue, @PathVariable long id,
                                 @AuthenticationPrincipal CurrentUser currentUser) {
-
-        Optional<Savings> saving = savingsService.findByIdAndUser(id, currentUser.getUser());
-        if (saving.isPresent()) {
-            saving.get().setPreviousValue(saving.get().getValue());
-            saving.get().setValue(newValue);
-            savingsService.save(saving.get());
-        } else throw new RuntimeException("Savings not found");
-
+        savingsService.increaseValue(currentUser.getUser(), id, newValue);
         return "redirect:/savings/all";
     }
 }

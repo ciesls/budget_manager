@@ -6,7 +6,6 @@ import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.category.CategoryService;
 import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
-import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -95,9 +94,8 @@ public class BudgetServiceImpl implements BudgetService {
     @Override
     public List<Expense> getBudgetExpenses(List<Category> categories, User user) {
         List<Expense> allBudgetExpenses = new ArrayList<>();
-
-        for (int i = 0; i < categories.size(); i++) {
-            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUser(categories.get(i), user));
+        for (Category category : categories) {
+            allBudgetExpenses.addAll(expenseService.findAllByCategoryAndUser(category, user));
         }
         return allBudgetExpenses;
 
