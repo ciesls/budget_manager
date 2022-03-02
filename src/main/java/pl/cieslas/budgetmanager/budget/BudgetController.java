@@ -27,7 +27,8 @@ public class BudgetController {
     private final UpdatesService updatesService;
     private final BudgetDetailsDTOService budgetDetailsDTOService;
 
-    public BudgetController(BudgetService budgetService, CategoryService categoryService, UpdatesService updatesService, BudgetDetailsDTOService budgetDetailsDTOService) {
+    public BudgetController(BudgetService budgetService, CategoryService categoryService,
+                            UpdatesService updatesService, BudgetDetailsDTOService budgetDetailsDTOService) {
         this.budgetService = budgetService;
         this.categoryService = categoryService;
         this.updatesService = updatesService;

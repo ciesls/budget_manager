@@ -9,7 +9,6 @@ import pl.cieslas.budgetmanager.account.AccountService;
 import pl.cieslas.budgetmanager.updates.UpdatesService;
 import pl.cieslas.budgetmanager.user.CurrentUser;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -49,13 +48,7 @@ public class IncomeController {
         income.setUser(currentUser.getUser());
         income.setCreatedOn(LocalDate.now());
         incomeService.save(income);
-        Long accountId = income.getAccount().getId();
-        Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-        if (account.isPresent()) {
-            BigDecimal currentBalance = account.get().getBalance();
-            account.get().setBalance(currentBalance.add(income.getAmount()));
-            accountService.save(account.get());
-        }
+        incomeService.updateAccountAfterIncomeAdd(currentUser.getUser(), income);
         return "redirect:/dashboard";
     }
 
@@ -68,13 +61,7 @@ public class IncomeController {
     public String deleteIncome(@AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
         Optional<Income> income = incomeService.findByIdAndUser(id, currentUser.getUser());
         if (income.isPresent()) {
-            Long accountId = income.get().getAccount().getId();
-            Optional<Account> account = accountService.findByIdAndUser(accountId, currentUser.getUser());
-            if (account.isPresent()) {
-                BigDecimal currentBalance = account.get().getBalance();
-                account.get().setBalance(currentBalance.subtract(income.get().getAmount()));
-                accountService.save(account.get());
-            }
+            incomeService.updateAccountAfterIncomeDelete(currentUser.getUser(), income.get());
         } else throw new RuntimeException("Some error");
         incomeService.deleteByIdAndUser(id, currentUser.getUser());
 
@@ -92,9 +79,7 @@ public class IncomeController {
 
     @PostMapping("/edit/{id}")
     public String editIncome(Income income, @AuthenticationPrincipal CurrentUser currentUser, @PathVariable long id) {
-
         updatesService.updateAccountWithIncome(income, currentUser.getUser(), id);
-
         return "redirect:/income/all";
     }
 

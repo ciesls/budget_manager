@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.cieslas.budgetmanager.account.Account;
+import pl.cieslas.budgetmanager.account.AccountService;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class IncomeServiceImpl implements IncomeService {
 
     private final IncomeRepository incomeRepository;
+    private final AccountService accountService;
 
     @Autowired
-    public IncomeServiceImpl(IncomeRepository incomeRepository) {
+    public IncomeServiceImpl(IncomeRepository incomeRepository, AccountService accountService) {
         this.incomeRepository = incomeRepository;
+        this.accountService = accountService;
     }
 
     @Override
@@ -56,5 +60,27 @@ public class IncomeServiceImpl implements IncomeService {
     @Override
     public BigDecimal sumOfIncome(List<Income> incomes) {
         return incomes.stream().map(Income::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public void updateAccountAfterIncomeAdd(User user, Income income) {
+        Long accountId = income.getAccount().getId();
+        Optional<Account> account = accountService.findByIdAndUser(accountId, user);
+        if (account.isPresent()) {
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.add(income.getAmount()));
+            accountService.save(account.get());
+        }
+    }
+
+    @Override
+    public void updateAccountAfterIncomeDelete(User user, Income income) {
+        Long accountId = income.getAccount().getId();
+        Optional<Account> account = accountService.findByIdAndUser(accountId, user);
+        if (account.isPresent()) {
+            BigDecimal currentBalance = account.get().getBalance();
+            account.get().setBalance(currentBalance.subtract(income.getAmount()));
+            accountService.save(account.get());
+        }
     }
 }

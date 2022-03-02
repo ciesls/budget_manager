@@ -1,5 +1,6 @@
 package pl.cieslas.budgetmanager.income;
 
+import pl.cieslas.budgetmanager.account.Account;
 import pl.cieslas.budgetmanager.income.Income;
 import pl.cieslas.budgetmanager.user.User;
 
@@ -23,4 +24,8 @@ public interface IncomeService {
     List<Income> findAllByUserAndCreatedOnBetween(User user, LocalDate monthStart, LocalDate currentTime);
 
     BigDecimal sumOfIncome(List<Income> incomes);
+
+    void updateAccountAfterIncomeAdd(User user, Income income);
+
+    void updateAccountAfterIncomeDelete(User user, Income income);
 }
