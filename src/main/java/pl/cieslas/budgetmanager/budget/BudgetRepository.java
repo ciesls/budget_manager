@@ -6,6 +6,7 @@ import pl.cieslas.budgetmanager.user.User;
 
 import java.util.List;
 import java.util.Optional;
+@Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     Optional<Budget> findById(Long id);
