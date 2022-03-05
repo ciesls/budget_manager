@@ -30,7 +30,8 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, int enabled, Set<Role> roles, List<Budget> userBudgets, List<Expense> userExpenses, List<Category> userCategories) {
+    public User(Long id, String username, String password, String email, int enabled, Set<Role> roles,
+                List<Budget> userBudgets, List<Expense> userExpenses, List<Category> userCategories) {
         this.id = id;
         this.username = username;
         this.password = password;

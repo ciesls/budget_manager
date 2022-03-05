@@ -11,7 +11,6 @@ import pl.cieslas.budgetmanager.expense.Expense;
 import pl.cieslas.budgetmanager.expense.ExpenseService;
 import pl.cieslas.budgetmanager.income.Income;
 import pl.cieslas.budgetmanager.income.IncomeService;
-import pl.cieslas.budgetmanager.user.CurrentUser;
 import pl.cieslas.budgetmanager.user.User;
 
 import java.math.BigDecimal;
@@ -37,23 +36,7 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
 
     @Override
     public void setBudgetOther(Budget budget, List<Category> categories, User user) {
-        Budget budgetOther = budgetService.findByNameAndUser("Other", user);
-        if (budgetOther == null) {
-            Budget newBudget = new Budget();
-            newBudget.setName("Other");
-            newBudget.setAmount(BigDecimal.ZERO);
-            newBudget.setUser(user);
-            budgetService.saveBudget(newBudget);
-        }
-        Category categoryOther = categoryService.findByNameAndUser("Other", user);
-        if (categoryOther == null) {
-            Category newCategory = new Category();
-            newCategory.setUser(user);
-            newCategory.setName("Other");
-            newCategory.setBudget(budgetService.findByNameAndUser("Other", user));
-            categoryService.saveCategory(newCategory);
-
-        }
+        checkIfBudgetAndCategoryOtherExists(user);
         categories = categoryService.findAllByUserAndBudget(user, budget);
         for (Category category : categories) {
             category.setBudget(budgetService.findByNameAndUser("Other", user));
@@ -62,25 +45,7 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
 
     @Override
     public void setCategoryOther(Category category, List<Expense> expenses, User user) {
-        Budget budgetOther = budgetService.findByNameAndUser("Other", user);
-        if (budgetOther == null) {
-            Budget newBudget = new Budget();
-            newBudget.setName("Other");
-            newBudget.setAmount(BigDecimal.ZERO);
-            newBudget.setUser(user);
-            budgetService.saveBudget(newBudget);
-        }
-
-        Category categoryOther = categoryService.findByNameAndUser("Other", user);
-        if (categoryOther == null) {
-            Category newCategory = new Category();
-            newCategory.setUser(user);
-            newCategory.setName("Other");
-            newCategory.setBudget(budgetService.findByNameAndUser("Other", user));
-            categoryService.saveCategory(newCategory);
-
-        }
-
+        checkIfBudgetAndCategoryOtherExists(user);
         expenses = expenseService.findAllByCategoryAndUser(category, user);
         for (Expense expense : expenses) {
             expense.setCategory(categoryService.findByNameAndUser("Other", user));
@@ -136,6 +101,28 @@ public class UpdatesServiceServiceImpl implements UpdatesService {
         } else throw new RuntimeException("Not found");
     }
 
+    @Override
+    public void checkIfBudgetAndCategoryOtherExists(User user) {
+
+        Budget budgetOther = budgetService.findByNameAndUser("Other", user);
+        if (budgetOther == null) {
+            Budget newBudget = new Budget();
+            newBudget.setName("Other");
+            newBudget.setAmount(BigDecimal.ZERO);
+            newBudget.setUser(user);
+            budgetService.saveBudget(newBudget);
+        }
+        Category categoryOther = categoryService.findByNameAndUser("Other", user);
+        if (categoryOther == null) {
+            Category newCategory = new Category();
+            newCategory.setUser(user);
+            newCategory.setName("Other");
+            newCategory.setBudget(budgetService.findByNameAndUser("Other", user));
+            categoryService.saveCategory(newCategory);
+
+        }
+
+    }
 
 }
 

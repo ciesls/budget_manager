@@ -19,6 +19,6 @@ public interface UpdatesService {
 
     void updateAccountWithExpense(Expense expense, User user, long id);
 
-
+    void checkIfBudgetAndCategoryOtherExists(User user);
 
 }
