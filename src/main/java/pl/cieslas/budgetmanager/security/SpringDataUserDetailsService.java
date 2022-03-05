@@ -6,7 +6,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import pl.cieslas.budgetmanager.entity.User;
+import pl.cieslas.budgetmanager.user.User;
+import pl.cieslas.budgetmanager.user.CurrentUser;
+import pl.cieslas.budgetmanager.user.UserService;
 
 import java.util.HashSet;
 import java.util.Set;
