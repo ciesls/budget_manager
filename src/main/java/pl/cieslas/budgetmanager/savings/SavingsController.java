@@ -69,7 +69,7 @@ public class SavingsController {
         return "redirect:/savings/all";
     }
 
-    @GetMapping("/increase/{id}")
+    @GetMapping("/change/{id}")
     public String increaseSavingFrom(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser currentUser) {
         Optional<Savings> saving = savingsService.findByIdAndUser(id, currentUser.getUser());
         if (saving.isPresent()) {
@@ -78,7 +78,7 @@ public class SavingsController {
         return "savings/savingsChangeValueForm";
     }
 
-    @PostMapping("/increase/{id}")
+    @PostMapping("/change/{id}")
     public String increaseValue(@RequestParam BigDecimal newValue, @PathVariable long id,
                                 @AuthenticationPrincipal CurrentUser currentUser) {
         savingsService.increaseValue(currentUser.getUser(), id, newValue);

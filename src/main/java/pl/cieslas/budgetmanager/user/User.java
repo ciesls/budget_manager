@@ -3,7 +3,6 @@ package pl.cieslas.budgetmanager.user;
 import pl.cieslas.budgetmanager.budget.Budget;
 import pl.cieslas.budgetmanager.category.Category;
 import pl.cieslas.budgetmanager.expense.Expense;
-import pl.cieslas.budgetmanager.user.Role;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
